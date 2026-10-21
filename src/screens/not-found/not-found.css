@@ -1,0 +1,16 @@
+.not-found {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--indent-s);
+  width: 100%;
+  max-width: 420px;
+  padding: var(--indent-m) var(--gutter) var(--indent-xl);
+  text-align: center;
+}
+
+.not-found__text {
+  color: var(--text-secondary);
+}
