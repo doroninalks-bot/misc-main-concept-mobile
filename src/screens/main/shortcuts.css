@@ -1,0 +1,58 @@
+/* Лента выходит на поля страницы и листается до краев экрана */
+.main-shortcuts {
+  display: flex;
+  gap: var(--indent-12);
+  margin-inline: calc(-1 * var(--gutter));
+  /* Сверху 16: с отступом блока выходит 32 от поиска, как в макете, и тегу,
+     который выступает над плашкой на 10, хватает места */
+  padding: var(--indent-s) var(--gutter) 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+
+.main-shortcuts::-webkit-scrollbar {
+  display: none;
+}
+
+.main-shortcuts__item {
+  position: relative;
+  display: flex;
+  flex: 0 0 96px;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--indent-xs);
+  color: var(--text-primary);
+  text-align: center;
+  text-decoration: none;
+  scroll-snap-align: start;
+}
+
+.main-shortcuts__icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: var(--radius-panels-lg);
+}
+
+.main-shortcuts__icon--promo {
+  background-color: var(--banner-bg-promo-primary);
+}
+
+.main-shortcuts__icon--accent {
+  background-color: var(--banner-bg-accent-secondary);
+}
+
+/* Подпись в две строки — перенос задан в данных, как в макете */
+.main-shortcuts__label {
+  white-space: pre-line;
+}
+
+.main-shortcuts__tag {
+  position: absolute;
+  top: -10px;
+  left: 38px;
+}

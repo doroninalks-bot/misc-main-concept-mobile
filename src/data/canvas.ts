@@ -9,34 +9,42 @@
  * Порядок шагов повторяет сценарий респондента.
  */
 
-import { DESKTOP, MOBILE, type CanvasItem } from "@banki/design-system/canvas"
+import { MOBILE, type CanvasItem } from "@banki/design-system/canvas"
+
+/** Рамка телефона высотой 628 — как рамки макета в Фигме, решение дизайнера */
+const PHONE = { ...MOBILE, height: 628 }
 
 export const scenarios: CanvasItem[] = [
   {
-    title: "Название сценария",
-    description: "Одно-два предложения: что за сценарий и что на доске.",
+    title: "Главная, мобильный концепт",
+    description:
+      "Баннеры каруселью по центру: сами меняются каждые 6 секунд, едут и увеличиваются; листаются свайпом и нажатием на соседний.",
     steps: [
       {
-        title: "Первый экран",
+        title: "Главная",
         note: "Интерактив",
         states: [
-          {
-            frames: [
-              { route: "/", label: "Mobile", ...MOBILE },
-              { route: "/", label: "Desktop", ...DESKTOP },
-            ],
-          },
+          { title: "Баннеры меняются", frames: [{ route: "/", label: "Mobile", ...PHONE }] },
+          { title: "Баннер «Войдите в аккаунт»", frames: [{ route: "/?slide=account", label: "Mobile", ...PHONE }] },
+          { title: "Баннер «Вклад», синий", frames: [{ route: "/?slide=deposit", label: "Mobile", ...PHONE }] },
+          { title: "Баннер «Вклад», серый", frames: [{ route: "/?slide=deposit-grey", label: "Mobile", ...PHONE }] },
         ],
       },
-      // Следующий шаг сценария. Несколько состояний одного шага — несколько
-      // объектов в states: они встают друг под другом.
-      // {
-      //   title: "Подтверждение",
-      //   states: [
-      //     { title: "Пустое", frames: [{ route: "/confirm", label: "Mobile", ...MOBILE }] },
-      //     { title: "Ошибка", frames: [{ route: "/confirm?state=error", label: "Mobile", ...MOBILE }] },
-      //   ],
-      // },
+    ],
+  },
+  {
+    title: "Главная, вариант 3: лента с наклоном",
+    description:
+      "Баннеры лентой с наклоном: соседние повернуты в 3D к центру, при смене лента едет и карточки разворачиваются. Экран /main-v3.",
+    steps: [
+      {
+        title: "Главная",
+        note: "Интерактив",
+        states: [
+          { title: "Баннеры меняются", frames: [{ route: "/main-v3", label: "Mobile", ...PHONE }] },
+          { title: "Баннер «Войдите в аккаунт»", frames: [{ route: "/main-v3?slide=account", label: "Mobile", ...PHONE }] },
+        ],
+      },
     ],
   },
 ]

@@ -1,0 +1,279 @@
+/**
+ * Герой главной. Высота 691 — как в макете: низ уходит под белую подложку.
+ * Фон лежит на сцене 375 по центру, чтобы на телефонах шире 375 композиция
+ * не разъезжалась, а цвет тянется во всю ширину.
+ */
+
+/* Герой прилипает к верху, белая подложка с продуктами наезжает на него при
+   прокрутке — решение дизайнера */
+.main-hero {
+  /* Шаг между баннерами: 236 + 8 из макета + запас на увеличенный текущий
+     (257 вместо 236, по 10,6 с каждой стороны) */
+  --banner-step: 254.6px;
+  --banner-scale: 1.09;
+  --banner-move-ms: 600ms;
+
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 691px;
+  overflow: hidden;
+  color: var(--text-on-color-strong);
+  isolation: isolate;
+}
+
+/* ——— Фон: темно-синий, как в «Варианте 10» макета (22711:55318) ———
+   Цвет — часть иллюстрации, вне токенов. Сверху справа черная тень, снизу —
+   синее свечение под баннерами; оба слоя в макете уже размыты. */
+
+.main-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: #0f1667;
+}
+
+.main-hero__stage {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 375px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.main-hero__stage img {
+  position: absolute;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.main-hero__glow {
+  left: -180px;
+  top: -464px;
+  width: 1259px;
+  height: 1098px;
+  transform: rotate(13.91deg);
+}
+
+.main-hero__podium-glow {
+  left: -456px;
+  top: -51px;
+  width: 1286px;
+  height: 897px;
+  transform: rotate(25.86deg);
+}
+
+/* ——— Шапка на цвете ——— */
+
+.main-hero__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: var(--indent-xs) var(--indent-s);
+}
+
+.main-hero .main-hero__logo {
+  color: var(--text-on-color-strong);
+}
+
+.main-hero__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--indent-xs);
+}
+
+/* «Войти» — h32 из макета так же, как в шапке дизайн-системы: h36 с текстом
+   14/20 — поля 6 + 20 + 6 */
+.main-hero .main-hero__login {
+  --button-font-size: 14px;
+  --button-line-height: 20px;
+}
+
+.main-hero__action {
+  display: flex;
+  padding: var(--indent-xs);
+  border: 0;
+  border-radius: var(--radius-controls-md);
+  background: none;
+  cursor: pointer;
+}
+
+.main-hero__action-icon {
+  width: 16px;
+  height: 16px;
+  background-color: var(--icon-on-color-strong);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+/* ——— Карусель баннеров по центру ——— */
+
+.main-hero__track {
+  position: absolute;
+  top: 92px;
+  left: 0;
+  right: 0;
+  height: 322px;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+/* Баннер по центру экрана, сдвинут на свое место от текущего; текущий
+   увеличен в 1,09 и непрозрачный, соседние — 60%, как в макете */
+.main-hero__slot {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 118px + 1px);
+  opacity: 0.6;
+  /* Соседние слегка размыты — решение дизайнера: фокус на текущем */
+  filter: blur(3px);
+  transform: translateX(calc(var(--offset) * var(--banner-step) + var(--drag, 0px))) scale(1);
+  transition:
+    transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity var(--banner-move-ms) ease,
+    filter var(--banner-move-ms) ease;
+  cursor: pointer;
+}
+
+.main-hero__slot.is-active {
+  z-index: 1;
+  opacity: 1;
+  filter: none;
+  transform: translateX(var(--drag, 0px)) scale(var(--banner-scale));
+  cursor: grab;
+}
+
+/* За экраном — прозрачные: перелет копии на другую сторону не виден */
+.main-hero__slot.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Параллакс — решение дизайнера: картинки баннера едут медленнее карточки.
+   У соседнего баннера картинка сдвинута наружу на 48, у текущего — на месте;
+   при смене карточка проезжает шаг, а картинка — на 48 меньше, и кажется,
+   что она глубже. За пальцем картинка отстает на 20%. */
+.main-hero__slot .main-banner__picture {
+  transform: translateX(calc(var(--offset) * 48px - var(--drag, 0px) * 0.2));
+  transition: transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Пока тянут пальцем, лента и картинки идут за ним без задержки */
+.main-hero__track.is-dragging .main-hero__slot,
+.main-hero__track.is-dragging .main-banner__picture {
+  transition: none;
+}
+
+/* ——— Лента с наклоном (/main-v3), по референсу дизайнера ———
+   Текущий плоский и крупный по центру. Соседние — 0,9, стоят с зазором 16 и
+   повернуты к центру на 30°: внутренний край уходит вглубь. Не перекрываются
+   и не тускнеют. При смене лента плавно едет на шаг: уходящий на ходу
+   поворачивается, приходящий разворачивается к зрителю.
+   Шаг: половина текущего 128,6 + зазор 16 + видимая половина соседа ~92. */
+.main-hero--tilt {
+  --banner-step: 237px;
+  --tilt-angle: 30deg;
+  --banner-move-ms: 550ms;
+  --banner-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.main-hero--tilt .main-hero__track {
+  perspective: 900px;
+}
+
+.main-hero--tilt .main-hero__slot {
+  opacity: 1;
+  filter: none;
+  transform: translateX(calc(var(--offset) * var(--banner-step) + var(--drag, 0px)))
+    rotateY(calc(var(--offset) * -1 * var(--tilt-angle))) scale(0.9);
+  transition:
+    transform var(--banner-move-ms) var(--banner-ease),
+    opacity var(--banner-move-ms) ease;
+}
+
+.main-hero--tilt .main-hero__slot.is-active {
+  transform: translateX(var(--drag, 0px)) rotateY(0deg) scale(var(--banner-scale));
+}
+
+/* Дальние за экраном — прозрачные, перелет копии на другую сторону не виден */
+.main-hero--tilt .main-hero__slot.is-hidden {
+  opacity: 0;
+}
+
+/* Картинка едет с карточкой — параллакса в этом варианте нет, как в референсе */
+.main-hero--tilt .main-hero__slot .main-banner__picture {
+  transform: none;
+}
+
+/* Боковые баннеры ленты — непрозрачность 85%, решение дизайнера */
+.main-hero--tilt .main-hero__slot:not(.is-active, .is-hidden) {
+  opacity: 0.85;
+}
+
+/* ——— Пагинация: под баннерами, точки 6, текущая — полоса 36 ——— */
+
+.main-hero__pagination {
+  position: absolute;
+  top: 445px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.main-hero__dot {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-absolute);
+  background-color: rgb(255 255 255 / 30%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: width 400ms ease;
+}
+
+.main-hero__dot.is-active {
+  width: 36px;
+}
+
+/* Полоса бежит, пока баннер на экране: дошла до конца — следующий баннер */
+.main-hero__progress {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background-color: var(--bg-primary);
+  animation-name: main-hero-progress;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+/* Остановленный баннер (рамка канваса) — полоса на середине, как в макете */
+.main-hero__progress.is-paused {
+  width: 50%;
+  animation: none;
+}
+
+@keyframes main-hero-progress {
+  to {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-hero {
+    --banner-move-ms: 0ms;
+  }
+
+  .main-hero__dot {
+    transition: none;
+  }
+}

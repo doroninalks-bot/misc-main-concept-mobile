@@ -1,0 +1,118 @@
+.product-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--indent-s);
+}
+
+.product-tiles h1 {
+  margin: 0;
+}
+
+.product-tiles__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--indent-xs);
+}
+
+.product-tiles__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--indent-xs);
+  min-width: 0;
+}
+
+/* ——— Плитка ——— */
+
+.product-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--indent-3xs);
+  height: 120px;
+  padding: var(--indent-12);
+  overflow: hidden;
+  border-radius: var(--radius-panels-lg);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.product-tile--tall {
+  height: 248px;
+}
+
+.product-tile--gray {
+  background-color: var(--bg-secondary);
+}
+
+.product-tile--promo {
+  background-color: var(--banner-bg-promo-secondary);
+}
+
+.product-tile--accent {
+  background-color: var(--banner-bg-accent-secondary);
+}
+
+.product-tile--arrow {
+  justify-content: space-between;
+}
+
+/* Иллюстрация выходит за край и обрезается плиткой, как в макете */
+.product-tile__art {
+  position: absolute;
+  display: block;
+  max-width: none;
+  pointer-events: none;
+}
+
+.product-tile__art--crop {
+  overflow: hidden;
+}
+
+.product-tile__art--crop img {
+  position: absolute;
+  max-width: none;
+}
+
+.product-tile__title,
+.product-tile__text,
+.product-tile__arrow {
+  position: relative;
+}
+
+.product-tile__text {
+  color: var(--text-secondary);
+}
+
+.product-tile__tag {
+  position: absolute;
+  left: var(--indent-12);
+  bottom: var(--indent-12);
+}
+
+.product-tile__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-absolute);
+  background-color: var(--bg-primary);
+}
+
+.product-tile__arrow-icon {
+  width: 18px;
+  height: 18px;
+  background-color: var(--icon-primary);
+  -webkit-mask: var(--icon) center / contain no-repeat;
+  mask: var(--icon) center / contain no-repeat;
+}
+
+@media (hover: hover) {
+  .product-tile__art {
+    transition: scale 300ms ease;
+  }
+
+  .product-tile:hover .product-tile__art {
+    scale: 1.04;
+  }
+}

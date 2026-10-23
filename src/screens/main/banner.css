@@ -1,0 +1,98 @@
+/* Баннер героя. Цвета заливки — часть иллюстрации баннера, вне токенов */
+.main-banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--indent-xs);
+  width: 236px;
+  min-height: 322px;
+  padding: var(--indent-m);
+  overflow: hidden;
+  border: 0.5px solid rgb(255 255 255 / 40%);
+  border-radius: var(--radius-panels-2xl);
+  color: var(--text-on-color-strong);
+}
+
+.main-banner--account {
+  background-color: #5326da;
+}
+
+.main-banner--deposit {
+  background-color: #245bff;
+}
+
+.main-banner--deposit-grey {
+  background-color: #5066a5;
+}
+
+.main-banner__title,
+.main-banner__text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+}
+
+.main-banner__text {
+  opacity: 0.7;
+}
+
+/* Слои считаются от внешнего края карточки, как в макете: минус рамка 0,5 */
+.main-banner__art,
+.main-banner__picture {
+  position: absolute;
+  inset: -0.5px;
+  pointer-events: none;
+}
+
+.main-banner__picture {
+  inset: 0;
+}
+
+.main-banner__art img {
+  position: absolute;
+  display: block;
+  max-width: none;
+}
+
+/* Подсветка — размытый эллипс из макета, повернут как там */
+.main-banner__light {
+  left: -258px;
+  top: 50px;
+  width: 723px;
+  height: 471px;
+  transform: rotate(19.89deg);
+}
+
+.main-banner--deposit .main-banner__light {
+  top: 60px;
+  transform: rotate(28.33deg);
+}
+
+.main-banner--deposit-grey .main-banner__light {
+  top: 70px;
+}
+
+.main-banner__light-small {
+  left: -120px;
+  top: 172px;
+  width: 386px;
+  height: 285px;
+  transform: rotate(28.33deg);
+}
+
+.main-banner--account .main-banner__image {
+  left: -40.5px;
+  top: 142.3px;
+  width: 300px;
+  height: 206.3px;
+  object-fit: cover;
+}
+
+/* «16,3%» растянут по рамке — как в макете; у серого поверх второй слой */
+.main-banner--deposit .main-banner__image,
+.main-banner--deposit-grey .main-banner__image {
+  left: -58.5px;
+  top: 120.5px;
+  width: 337px;
+  height: 244px;
+}
