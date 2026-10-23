@@ -90,11 +90,17 @@ export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
   }
 
   return (
-    <section className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`)} aria-label="Баннеры">
+    <section
+      className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`)}
+      // Фон подкрашивается в цвет текущего баннера — hero.css по data-banner
+      data-banner={banners[active].id}
+      aria-label="Баннеры"
+    >
       <div className="main-hero__bg" aria-hidden="true">
         <div className="main-hero__stage">
           <img className="main-hero__glow" src={`${BACKGROUND}/glow.svg`} alt="" />
           <img className="main-hero__podium-glow" src={`${BACKGROUND}/podium-glow.svg`} alt="" />
+          <span className="main-hero__tint" />
         </div>
       </div>
 

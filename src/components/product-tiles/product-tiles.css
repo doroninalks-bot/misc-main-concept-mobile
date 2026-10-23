@@ -83,10 +83,30 @@
   color: var(--text-secondary);
 }
 
+/* Тег в точности из макета, а не Tag дизайн-системы — решение дизайнера,
+   см. docs/architecture.md: круглый, текст 12 medium белым, поля 8, у
+   коротких — 8 · 12. Цвета — из макета, в токенах их нет */
 .product-tile__tag {
   position: absolute;
   left: var(--indent-12);
   bottom: var(--indent-12);
+  padding: var(--indent-xs);
+  border-radius: var(--radius-absolute);
+  color: var(--text-on-color-strong);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.product-tile__tag--wide {
+  padding-inline: var(--indent-12);
+}
+
+.product-tile__tag--pink {
+  background-color: #e775d8;
+}
+
+.product-tile__tag--lilac {
+  background-color: #baa4ff;
 }
 
 .product-tile__arrow {

@@ -48,6 +48,9 @@ export interface Product {
   title: string
   text?: string
   tag?: string
+  /** Тег из макета: розовый — «Бонус 3000 Б», иначе сиреневый; `wide` — поля 12 у коротких */
+  tagTone?: "pink" | "lilac"
+  tagWide?: boolean
   /** `tall` — плитка 248 вместо 120 */
   tall?: boolean
   surface: "gray" | "promo" | "accent"
@@ -69,8 +72,8 @@ export interface Shortcut {
 
 /**
  * Быстрые ссылки под поиском: плашка с иллюстрацией и подпись, лента
- * листается пальцем. Макет — «Вариант 10», 22711:55364. Пятая ссылка в
- * макете повторяет «Оформите ОСАГО» с кошельком — перенесена как есть.
+ * листается пальцем. Макет — «Вариант 10», 22711:55364. Пятую ссылку из
+ * макета — повтор «Оформите ОСАГО» с кошельком — дизайнер убрал.
  */
 export const shortcuts: Shortcut[] = [
   {
@@ -117,12 +120,6 @@ export const shortcuts: Shortcut[] = [
     surface: "accent",
     art: [{ src: `${PRODUCTS}/coins-percent.png`, left: -8, top: -1, width: 113 }],
   },
-  {
-    id: "osago-2",
-    label: "Оформите\nОСАГО",
-    surface: "accent",
-    art: [{ src: `${PRODUCTS}/wallet.png`, left: -10, top: 5, width: 114 }],
-  },
 ]
 
 const SUBTITLE = "Решение за 5 минут"
@@ -134,6 +131,7 @@ export const productColumns: Product[][] = [
       id: "deposits",
       title: "Вклады",
       tag: "Бонус 3000 Б",
+      tagTone: "pink",
       tall: true,
       surface: "promo",
       art: [{ src: `${PRODUCTS}/coins.png`, left: -20, top: 19, width: 268 }],
@@ -194,6 +192,7 @@ export const productColumns: Product[][] = [
       id: "credits",
       title: "Кредиты",
       tag: "Без %",
+      tagWide: true,
       surface: "gray",
       art: [{ src: `${PRODUCTS}/coins-percent.png`, left: 68, top: 37, width: 118 }],
     },
@@ -202,6 +201,7 @@ export const productColumns: Product[][] = [
       title: "Займы",
       text: SUBTITLE,
       tag: "Бонус",
+      tagWide: true,
       surface: "gray",
       art: [{ src: `${PRODUCTS}/wallet.png`, left: 76, top: 47, width: 113 }],
     },
@@ -210,6 +210,7 @@ export const productColumns: Product[][] = [
       title: "Банковские карты",
       text: SUBTITLE,
       tag: "Бонус 3000 Б",
+      tagTone: "pink",
       tall: true,
       surface: "promo",
       art: [{ src: `${PRODUCTS}/cards.png`, left: 11, top: 33, width: 218 }],

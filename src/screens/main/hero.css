@@ -26,11 +26,26 @@
    Цвет — часть иллюстрации, вне токенов. Сверху справа черная тень, снизу —
    синее свечение под баннерами; оба слоя в макете уже размыты. */
 
+/* Фон на четверть подкрашен в цвет текущего баннера (banner.css) и плавно
+   перетекает при смене — решение дизайнера */
+.main-hero {
+  --hero-tint: #5326da;
+}
+
+.main-hero[data-banner="deposit"] {
+  --hero-tint: #245bff;
+}
+
+.main-hero[data-banner="deposit-grey"] {
+  --hero-tint: #5066a5;
+}
+
 .main-hero__bg {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: #0f1667;
+  background-color: color-mix(in srgb, var(--hero-tint) 25%, #0f1667);
+  transition: background-color 900ms ease;
 }
 
 .main-hero__stage {
@@ -63,6 +78,24 @@
   width: 1286px;
   height: 897px;
   transform: rotate(25.86deg);
+}
+
+/* Свечение за баннерами в цвет текущего — решение дизайнера: при смене
+   плавно перетекает в оттенок нового баннера (фиолетовый, голубоватый,
+   серый). Размытый эллипс шире экрана за баннерами: оттенок виден между
+   карточками и по краям */
+.main-hero__tint {
+  position: absolute;
+  left: -92px;
+  top: 30px;
+  width: 560px;
+  height: 480px;
+  border-radius: 50%;
+  background-color: var(--hero-tint);
+  opacity: 0.75;
+  filter: blur(60px);
+  transition: background-color 900ms ease;
+  pointer-events: none;
 }
 
 /* ——— Шапка на цвете ——— */
@@ -203,9 +236,17 @@
   opacity: 0;
 }
 
-/* Картинка едет с карточкой — параллакса в этом варианте нет, как в референсе */
+/* Легкий параллакс иллюстрации — решение дизайнера: у соседнего баннера
+   картинка сдвинута наружу на 20 и опущена на 12, у текущего — на месте.
+   При смене она доезжает и поднимается с отставанием от карточки; за пальцем
+   отстает на 10%. Модуль сдвига вниз — через max(), чтобы и слева, и справа
+   картинка была ниже. */
 .main-hero--tilt .main-hero__slot .main-banner__picture {
-  transform: none;
+  transform: translate(
+    calc(var(--offset) * 20px - var(--drag, 0px) * 0.1),
+    calc(max(var(--offset), var(--offset) * -1) * 12px)
+  );
+  transition: transform var(--banner-move-ms) cubic-bezier(0.33, 0, 0.2, 1);
 }
 
 /* Боковые баннеры ленты — непрозрачность 85%, решение дизайнера */

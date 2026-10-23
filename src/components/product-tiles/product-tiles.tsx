@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 
-import { Tag, cx, maskIcon } from "@banki/design-system"
+import { cx, maskIcon } from "@banki/design-system"
 
 import type { Product, ProductArt } from "@/data/main"
 
@@ -47,9 +47,16 @@ function ProductTile({ product }: { product: Product }) {
       <span className="product-tile__title text-h4">{product.title}</span>
       {product.text && <span className="product-tile__text text-body-14">{product.text}</span>}
       {product.tag && (
-        <Tag color="purple" type="primary" className="product-tile__tag">
+        // Не Tag дизайн-системы: тег в точности из макета — решение дизайнера
+        <span
+          className={cx(
+            "product-tile__tag text-body-12 text-medium",
+            `product-tile__tag--${product.tagTone ?? "lilac"}`,
+            product.tagWide && "product-tile__tag--wide",
+          )}
+        >
           {product.tag}
-        </Tag>
+        </span>
       )}
       {product.arrow && (
         <span className="product-tile__arrow">

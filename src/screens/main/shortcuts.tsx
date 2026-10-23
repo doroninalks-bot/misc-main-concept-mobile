@@ -1,4 +1,4 @@
-import { Tag, cx } from "@banki/design-system"
+import { cx } from "@banki/design-system"
 
 import { ArtLayer } from "@/components/product-tiles/product-tiles"
 import { shortcuts } from "@/data/main"
@@ -22,9 +22,8 @@ export function Shortcuts() {
           </span>
           <span className="main-shortcuts__label text-body-14">{item.label}</span>
           {item.tag && (
-            <Tag color="blue" type="primary" className="main-shortcuts__tag">
-              {item.tag}
-            </Tag>
+            // Не Tag дизайн-системы: тег в точности из макета — решение дизайнера
+            <span className="main-shortcuts__tag text-body-12 text-medium">{item.tag}</span>
           )}
         </a>
       ))}

@@ -51,8 +51,15 @@
   white-space: pre-line;
 }
 
+/* Тег в точности из макета — решение дизайнера: синий #3e5fff, круглый,
+   поля 4 · 8, текст 12 medium белым */
 .main-shortcuts__tag {
   position: absolute;
   top: -10px;
   left: 38px;
+  padding: var(--indent-xxs) var(--indent-xs);
+  border-radius: var(--radius-absolute);
+  background-color: #3e5fff;
+  color: var(--text-on-color-strong);
+  white-space: nowrap;
 }
