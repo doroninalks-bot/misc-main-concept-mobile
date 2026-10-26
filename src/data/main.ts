@@ -63,7 +63,6 @@ export interface Shortcut {
   id: string
   /** Перенос строки — как в макете */
   label: string
-  tag?: string
   /** Слои иллюстрации — координаты в плашке 80 × 80 из макета */
   art: ProductArt[]
 }
@@ -77,7 +76,6 @@ export const shortcuts: Shortcut[] = [
   {
     id: "app",
     label: "Скачайте\nприложение",
-    tag: "Без\u00a0%",
     art: [{ src: `${PRODUCTS}/tag-purple.png`, left: -13, top: -8, width: 117 }],
   },
   {

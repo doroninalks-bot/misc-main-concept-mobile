@@ -3,8 +3,7 @@
   display: flex;
   gap: var(--indent-12);
   margin-inline: calc(-1 * var(--gutter));
-  /* Сверху 16: с отступом блока выходит 32 от поиска, как в макете, и тегу,
-     который выступает над плашкой на 10, хватает места */
+  /* Сверху 16: с отступом блока выходит 32 от поиска, как в макете */
   padding: var(--indent-s) var(--gutter) 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -43,17 +42,4 @@
 /* Подпись в две строки — перенос задан в данных, как в макете */
 .main-shortcuts__label {
   white-space: pre-line;
-}
-
-/* Тег в точности из макета — решение дизайнера: синий #3e5fff, круглый,
-   поля 4 · 8, текст 12 medium белым */
-.main-shortcuts__tag {
-  position: absolute;
-  top: -10px;
-  left: 38px;
-  padding: var(--indent-xxs) var(--indent-xs);
-  border-radius: var(--radius-absolute);
-  background-color: #3e5fff;
-  color: var(--text-on-color-strong);
-  white-space: nowrap;
 }

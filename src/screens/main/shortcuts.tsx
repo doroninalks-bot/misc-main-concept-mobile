@@ -19,10 +19,6 @@ export function Shortcuts() {
             ))}
           </span>
           <span className="main-shortcuts__label text-body-14">{item.label}</span>
-          {item.tag && (
-            // Не Tag дизайн-системы: тег в точности из макета — решение дизайнера
-            <span className="main-shortcuts__tag text-body-12 text-medium">{item.tag}</span>
-          )}
         </a>
       ))}
     </nav>
