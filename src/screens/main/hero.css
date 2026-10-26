@@ -22,29 +22,32 @@
   isolation: isolate;
 }
 
-/* ——— Фон: темно-синий, как в «Варианте 10» макета (22711:55318) ———
-   Цвет — часть иллюстрации, вне токенов. Сверху справа черная тень, снизу —
-   синее свечение под баннерами; оба слоя в макете уже размыты. */
-
-/* Фон на четверть подкрашен в цвет текущего баннера (banner.css) и плавно
-   перетекает при смене — решение дизайнера */
+/* ——— Фон: размытые пятна в цвет текущего баннера ———
+   Макет — раздел 9, MobileBackground (22797:43972 и 22797:44271): база и три
+   размытых пятна. У фиолетового баннера фон фиолетовый, у синего и серого —
+   синий (серого фона в макете нет). При смене цвета плавно перетекают.
+   Цвета — часть иллюстрации, вне токенов. */
 .main-hero {
-  --hero-tint: #5326da;
+  --hero-bg: #1a0b52;
+  --hero-glow-base: #3d2299;
+  --hero-glow-accent: #d27bff;
+  --hero-glow-accent-opacity: 0.2;
+  --hero-glow-bright: #5b33c9;
 }
 
-.main-hero[data-banner="deposit"] {
-  --hero-tint: #245bff;
-}
-
-.main-hero[data-banner="deposit-grey"] {
-  --hero-tint: #5066a5;
+.main-hero:is([data-banner="deposit"], [data-banner="deposit-grey"]) {
+  --hero-bg: #090d4a;
+  --hero-glow-base: #183e9d;
+  --hero-glow-accent: #a677ff;
+  --hero-glow-accent-opacity: 0.4;
+  --hero-glow-bright: #1c3cc2;
 }
 
 .main-hero__bg {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: color-mix(in srgb, var(--hero-tint) 25%, #0f1667);
+  background-color: var(--hero-bg);
   transition: background-color 900ms ease;
 }
 
@@ -57,45 +60,36 @@
   transform: translateX(-50%);
 }
 
-.main-hero__stage img {
+/* Рамка фона в макете — 375 × 494 в точке (385,7; 48,2) этого SVG */
+.main-hero__glow {
   position: absolute;
+  left: -385.683px;
+  top: -48.239px;
   display: block;
   max-width: none;
   pointer-events: none;
 }
 
-.main-hero__glow {
-  left: -180px;
-  top: -464px;
-  width: 1259px;
-  height: 1098px;
-  transform: rotate(13.91deg);
+.main-hero__glow path {
+  transition: fill 900ms ease;
 }
 
-.main-hero__podium-glow {
-  left: -456px;
-  top: -51px;
-  width: 1286px;
-  height: 897px;
-  transform: rotate(25.86deg);
+.main-hero__glow-base {
+  fill: var(--hero-glow-base);
 }
 
-/* Свечение за баннерами в цвет текущего — решение дизайнера: при смене
-   плавно перетекает в оттенок нового баннера (фиолетовый, голубоватый,
-   серый). Размытый эллипс шире экрана за баннерами: оттенок виден между
-   карточками и по краям */
-.main-hero__tint {
-  position: absolute;
-  left: -92px;
-  top: 30px;
-  width: 560px;
-  height: 480px;
-  border-radius: 50%;
-  background-color: var(--hero-tint);
-  opacity: 0.75;
-  filter: blur(60px);
-  transition: background-color 900ms ease;
-  pointer-events: none;
+.main-hero__glow-accent {
+  opacity: var(--hero-glow-accent-opacity);
+  fill: var(--hero-glow-accent);
+  transition: opacity 900ms ease;
+}
+
+.main-hero__glow-accent path {
+  fill: inherit;
+}
+
+.main-hero__glow-bright {
+  fill: var(--hero-glow-bright);
 }
 
 /* ——— Шапка на цвете ——— */
@@ -236,17 +230,10 @@
   opacity: 0;
 }
 
-/* Легкий параллакс иллюстрации — решение дизайнера: у соседнего баннера
-   картинка сдвинута наружу на 20 и опущена на 12, у текущего — на месте.
-   При смене она доезжает и поднимается с отставанием от карточки; за пальцем
-   отстает на 10%. Модуль сдвига вниз — через max(), чтобы и слева, и справа
-   картинка была ниже. */
+/* Без параллакса — решение дизайнера: картинка едет вместе с карточкой */
 .main-hero--tilt .main-hero__slot .main-banner__picture {
-  transform: translate(
-    calc(var(--offset) * 20px - var(--drag, 0px) * 0.1),
-    calc(max(var(--offset), var(--offset) * -1) * 12px)
-  );
-  transition: transform var(--banner-move-ms) cubic-bezier(0.33, 0, 0.2, 1);
+  transform: none;
+  transition: none;
 }
 
 /* Боковые баннеры ленты — непрозрачность 85%, решение дизайнера */
