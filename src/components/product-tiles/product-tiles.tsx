@@ -45,7 +45,7 @@ function ProductTile({ product }: { product: Product }) {
         <ArtLayer key={index} layer={layer} />
       ))}
       <span className="product-tile__title text-h4">{product.title}</span>
-      {product.text && <span className="product-tile__text text-body-14">{product.text}</span>}
+      {product.text && <span className="product-tile__text text-body-12">{product.text}</span>}
       {product.tag && (
         // Не Tag дизайн-системы: тег в точности из макета — решение дизайнера
         <span

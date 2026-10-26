@@ -1,5 +1,3 @@
-import { cx } from "@banki/design-system"
-
 import { ArtLayer } from "@/components/product-tiles/product-tiles"
 import { shortcuts } from "@/data/main"
 
@@ -15,7 +13,7 @@ export function Shortcuts() {
     <nav className="main-shortcuts" aria-label="Быстрые ссылки">
       {shortcuts.map((item) => (
         <a key={item.id} href="#" className="main-shortcuts__item" onClick={(event) => event.preventDefault()}>
-          <span className={cx("main-shortcuts__icon", `main-shortcuts__icon--${item.surface}`)}>
+          <span className="main-shortcuts__icon">
             {item.art.map((layer, index) => (
               <ArtLayer key={index} layer={layer} />
             ))}

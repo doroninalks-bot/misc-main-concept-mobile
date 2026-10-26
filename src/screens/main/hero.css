@@ -7,10 +7,9 @@
 /* Герой прилипает к верху, белая подложка с продуктами наезжает на него при
    прокрутке — решение дизайнера */
 .main-hero {
-  /* Шаг между баннерами: 236 + 8 из макета + запас на увеличенный текущий
-     (257 вместо 236, по 10,6 с каждой стороны) */
-  --banner-step: 254.6px;
-  --banner-scale: 1.09;
+  /* Шаг между центрами баннеров, как в разделе 9 макета: половина текущего
+     130 + зазор 16 + половина соседнего 118 */
+  --banner-step: 264px;
   --banner-move-ms: 600ms;
 
   position: sticky;
@@ -138,26 +137,25 @@
 
 /* ——— Карусель баннеров по центру ——— */
 
+/* Лента 354 — по высоте текущего, с 72 от верха, как в макете */
 .main-hero__track {
   position: absolute;
-  top: 92px;
+  top: 72px;
   left: 0;
   right: 0;
-  height: 322px;
+  height: 354px;
   touch-action: pan-y;
   user-select: none;
 }
 
-/* Баннер по центру экрана, сдвинут на свое место от текущего; текущий
-   увеличен в 1,09 и непрозрачный, соседние — 60%, как в макете */
+/* Баннер по центру экрана, сдвинут на свое место от текущего. Текущий —
+   260 × 354, соседние — 236 × 322 и размыты на 2,5 (banner.css), как в макете */
 .main-hero__slot {
   position: absolute;
-  top: 0;
-  left: calc(50% - 118px + 1px);
-  opacity: 0.6;
-  /* Соседние слегка размыты — решение дизайнера: фокус на текущем */
-  filter: blur(3px);
-  transform: translateX(calc(var(--offset) * var(--banner-step) + var(--drag, 0px))) scale(1);
+  top: 50%;
+  left: 50%;
+  filter: blur(2.5px);
+  transform: translate(calc(-50% + var(--offset) * var(--banner-step) + var(--drag, 0px)), -50%);
   transition:
     transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
     opacity var(--banner-move-ms) ease,
@@ -167,9 +165,8 @@
 
 .main-hero__slot.is-active {
   z-index: 1;
-  opacity: 1;
   filter: none;
-  transform: translateX(var(--drag, 0px)) scale(var(--banner-scale));
+  transform: translate(calc(-50% + var(--drag, 0px)), -50%);
   cursor: grab;
 }
 
@@ -199,9 +196,9 @@
    повернуты к центру на 30°: внутренний край уходит вглубь. Не перекрываются
    и не тускнеют. При смене лента плавно едет на шаг: уходящий на ходу
    поворачивается, приходящий разворачивается к зрителю.
-   Шаг: половина текущего 128,6 + зазор 16 + видимая половина соседа ~92. */
+   Шаг: половина текущего 130 + зазор 16 + видимая половина соседа ~92. */
 .main-hero--tilt {
-  --banner-step: 237px;
+  --banner-step: 238px;
   --tilt-angle: 30deg;
   --banner-move-ms: 550ms;
   --banner-ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -214,7 +211,7 @@
 .main-hero--tilt .main-hero__slot {
   opacity: 1;
   filter: none;
-  transform: translateX(calc(var(--offset) * var(--banner-step) + var(--drag, 0px)))
+  transform: translate(calc(-50% + var(--offset) * var(--banner-step) + var(--drag, 0px)), -50%)
     rotateY(calc(var(--offset) * -1 * var(--tilt-angle))) scale(0.9);
   transition:
     transform var(--banner-move-ms) var(--banner-ease),
@@ -222,7 +219,7 @@
 }
 
 .main-hero--tilt .main-hero__slot.is-active {
-  transform: translateX(var(--drag, 0px)) rotateY(0deg) scale(var(--banner-scale));
+  transform: translate(calc(-50% + var(--drag, 0px)), -50%) rotateY(0deg) scale(1);
 }
 
 /* Дальние за экраном — прозрачные, перелет копии на другую сторону не виден */
@@ -241,22 +238,22 @@
   opacity: 0.85;
 }
 
-/* ——— Пагинация: под баннерами, точки 6, текущая — полоса 36 ——— */
+/* ——— Пагинация: под баннерами, точки 8 через 8, текущая — полоса 48 ——— */
 
 .main-hero__pagination {
   position: absolute;
-  top: 445px;
+  top: 442px;
   left: 50%;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   transform: translateX(-50%);
 }
 
 .main-hero__dot {
   position: relative;
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   padding: 0;
   overflow: hidden;
   border: 0;
@@ -269,7 +266,7 @@
 }
 
 .main-hero__dot.is-active {
-  width: 36px;
+  width: 48px;
 }
 
 /* Полоса бежит, пока баннер на экране: дошла до конца — следующий баннер */

@@ -1,7 +1,6 @@
 /**
  * Контент главной: баннеры героя, быстрые ссылки и плитки «Наши продукты».
- * Макет — Фигма 9bgbzWfk084WSVi7eU3awY: экран — 22682:28402, баннеры и
- * быстрые ссылки — 22713:55662.
+ * Макет — Фигма 9bgbzWfk084WSVi7eU3awY, раздел 9: экран — 22797:43970.
  */
 
 const IMAGES = "/assets/images/misc-main-concept-mobile"
@@ -65,60 +64,57 @@ export interface Shortcut {
   /** Перенос строки — как в макете */
   label: string
   tag?: string
-  surface: "promo" | "accent"
   /** Слои иллюстрации — координаты в плашке 80 × 80 из макета */
   art: ProductArt[]
 }
 
 /**
  * Быстрые ссылки под поиском: плашка с иллюстрацией и подпись, лента
- * листается пальцем. Макет — «Вариант 10», 22711:55364. Пятую ссылку из
- * макета — повтор «Оформите ОСАГО» с кошельком — дизайнер убрал.
+ * листается пальцем. Макет — раздел 9, 22797:44016. Пятую ссылку из макета —
+ * повтор «Оформите ОСАГО» с кошельком — дизайнер убрал.
  */
 export const shortcuts: Shortcut[] = [
   {
     id: "app",
     label: "Скачайте\nприложение",
     tag: "Без\u00a0%",
-    surface: "promo",
-    art: [{ src: `${PRODUCTS}/products.png`, left: -13.6, top: -13.6, width: 132.6, rotate: -3.98 }],
+    art: [{ src: `${PRODUCTS}/tag-purple.png`, left: -13, top: -8, width: 117 }],
   },
   {
     id: "deposit-bonus",
     label: "Бонус\nк\u00a0ставке",
-    surface: "accent",
-    art: [{ src: `${PRODUCTS}/wallet.png`, left: -6, top: 3, width: 114 }],
-  },
-  {
-    id: "osago",
-    label: "Оформите\nОСАГО",
-    surface: "accent",
-    // Три слоя группы из макета: щит, тень-подставка и машина
-    art: [
-      {
-        src: `${PRODUCTS}/is-small.png`,
-        left: 11.1,
-        top: 15.9,
-        width: 32.5,
-        height: 36.5,
-        crop: { left: -20.51, top: -5.02, width: 387.69, height: 345.21 },
-      },
-      { src: `${PRODUCTS}/kasko-base.png`, left: 4.8, top: 52.2, width: 72.7, height: 28.7 },
-      {
-        src: `${PRODUCTS}/kasko.png`,
-        left: 22.5,
-        top: 11.9,
-        width: 79.5,
-        height: 90.7,
-        crop: { left: -49.56, top: -49.03, width: 181.94, height: 159.46 },
-      },
-    ],
+    art: [{ src: `${PRODUCTS}/wallet-purple.png`, left: -16.76, top: -2.55, width: 107.47 }],
   },
   {
     id: "loan",
     label: "Получи\nзайм",
-    surface: "accent",
-    art: [{ src: `${PRODUCTS}/coins-percent.png`, left: -8, top: -1, width: 113 }],
+    art: [{ src: `${PRODUCTS}/coins-purple.png`, left: -11, top: -1, width: 115 }],
+  },
+  {
+    id: "osago",
+    label: "Оформите\nОСАГО",
+    // Три слоя группы из макета: щит, перевернутая подставка и машина — кадры
+    // из одной картинки
+    art: [
+      { src: `${PRODUCTS}/shield-purple.png`, left: -13.95, top: 14.05, width: 40.17, height: 41.72 },
+      {
+        src: `${PRODUCTS}/osago-purple.png`,
+        left: -20.45,
+        top: 55.76,
+        width: 89.38,
+        height: 49.9,
+        rotate: 180,
+        crop: { left: -29.54, top: -19.05, width: 228.28, height: 409.52 },
+      },
+      {
+        src: `${PRODUCTS}/osago-purple.png`,
+        left: 8.56,
+        top: 11.16,
+        width: 103.44,
+        height: 105.05,
+        crop: { left: -48.25, top: -55.56, width: 167.32, height: 164.75 },
+      },
+    ],
   },
 ]
 
@@ -134,7 +130,7 @@ export const productColumns: Product[][] = [
       tagTone: "pink",
       tall: true,
       surface: "promo",
-      art: [{ src: `${PRODUCTS}/coins.png`, left: -20, top: 19, width: 268 }],
+      art: [{ src: `${PRODUCTS}/save.png`, left: -22.5, top: 15, width: 275 }],
     },
     {
       id: "currency",
@@ -194,7 +190,7 @@ export const productColumns: Product[][] = [
       tag: "Без %",
       tagWide: true,
       surface: "gray",
-      art: [{ src: `${PRODUCTS}/coins-percent.png`, left: 68, top: 37, width: 118 }],
+      art: [{ src: `${PRODUCTS}/coins-purple.png`, left: 65, top: 34, width: 127 }],
     },
     {
       id: "loans",
@@ -203,7 +199,7 @@ export const productColumns: Product[][] = [
       tag: "Бонус",
       tagWide: true,
       surface: "gray",
-      art: [{ src: `${PRODUCTS}/wallet.png`, left: 76, top: 47, width: 113 }],
+      art: [{ src: `${PRODUCTS}/wallet-purple.png`, left: 67, top: 36, width: 127 }],
     },
     {
       id: "cards",

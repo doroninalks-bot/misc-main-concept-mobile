@@ -1,42 +1,81 @@
-/* Баннер героя. Цвета заливки — часть иллюстрации баннера, вне токенов */
+/* Баннер героя по разделу 9 макета. Цвета заливки и подсветки — часть
+   иллюстрации баннера, вне токенов. Координаты слоев — от внешнего края
+   карточки, как в макете. При смене текущего размер, скругление, цвет,
+   картинка и подсветка плавно перетекают вместе с лентой. */
 .main-banner {
+  --banner-ease: var(--banner-move-ms, 600ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--indent-xs);
   width: 236px;
-  min-height: 322px;
+  height: 322px;
   padding: var(--indent-m);
   overflow: hidden;
   border: 0.5px solid rgb(255 255 255 / 40%);
-  border-radius: var(--radius-panels-2xl);
+  border-radius: 40px;
   color: var(--text-on-color-strong);
+  transition:
+    width var(--banner-ease),
+    height var(--banner-ease),
+    padding var(--banner-ease),
+    border-color var(--banner-ease),
+    border-radius var(--banner-ease),
+    background-color var(--banner-ease),
+    box-shadow var(--banner-ease);
+}
+
+/* Текущий — 260 × 354, без рамки, с легкой тенью; поля 24 от края */
+.main-banner--active {
+  width: 260px;
+  height: 354px;
+  padding: 23.5px;
+  border-color: transparent;
+  box-shadow: 0 0 34.5px rgb(0 0 0 / 4%);
 }
 
 .main-banner--account {
-  background-color: #5326da;
+  border-radius: 44px;
+  background-color: #613ad7;
 }
 
 .main-banner--deposit {
   background-color: #245bff;
 }
 
+.main-banner--deposit.main-banner--active {
+  background-color: #1f4ed9;
+}
+
 .main-banner--deposit-grey {
   background-color: #5066a5;
 }
 
-.main-banner__title,
-.main-banner__text {
+/* Заголовок 20 / 1,3 и текст 16 / 1,45 — у обоих состояний одинаковые */
+.main-banner__content {
   position: relative;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8.72px;
+}
+
+.main-banner--account .main-banner__content {
+  gap: 9.59px;
+}
+
+.main-banner__title,
+.main-banner__text {
   margin: 0;
+}
+
+.main-banner__title {
+  font-size: 20px;
 }
 
 .main-banner__text {
   opacity: 0.7;
 }
 
-/* Слои считаются от внешнего края карточки, как в макете: минус рамка 0,5 */
+/* Слои считаются от внешнего края карточки: минус рамка 0,5 */
 .main-banner__art,
 .main-banner__picture {
   position: absolute;
@@ -54,45 +93,128 @@
   max-width: none;
 }
 
-/* Подсветка — размытый эллипс из макета, повернут как там */
-.main-banner__light {
-  left: -258px;
-  top: 50px;
-  width: 723px;
-  height: 471px;
+/* Подсветка — размытый эллипс из макета, повернут как там. У текущего своя:
+   две подсветки сменяют друг друга. Карточка растет от центра, поэтому
+   подсветка текущего сдвинута на 12 правее — на экране обе на одном месте */
+.main-banner__light,
+.main-banner__light-active,
+.main-banner__light-small {
+  transition:
+    opacity var(--banner-ease),
+    left var(--banner-ease);
+}
+
+.main-banner__light-active,
+.main-banner--active .main-banner__light,
+.main-banner--active .main-banner__light-small {
+  opacity: 0;
+}
+
+.main-banner--active .main-banner__light-active {
+  opacity: 1;
+}
+
+.main-banner--account .main-banner__light {
+  left: -295.7px;
+  top: 55.25px;
+  width: 795.7px;
+  height: 517.9px;
   transform: rotate(19.89deg);
 }
 
-.main-banner--deposit .main-banner__light {
-  top: 60px;
+/* Та же подсветка вполовину прозрачнее */
+.main-banner--account .main-banner__light-active {
+  left: -283.7px;
+  top: 55.25px;
+  width: 795.7px;
+  height: 517.9px;
+  transform: rotate(19.89deg);
+}
+
+.main-banner--deposit .main-banner__light,
+.main-banner--deposit-grey .main-banner__light {
+  left: -258px;
+  top: 60.2px;
+  width: 723.4px;
+  height: 470.8px;
   transform: rotate(28.33deg);
 }
 
 .main-banner--deposit-grey .main-banner__light {
-  top: 70px;
+  top: 70.2px;
+  transform: rotate(19.89deg);
+}
+
+/* Серый текущим в макете не нарисован: та же подсветка, на месте */
+.main-banner--deposit-grey.main-banner--active .main-banner__light {
+  left: -246px;
+  opacity: 1;
+}
+
+.main-banner--deposit .main-banner__light-active {
+  left: -275.9px;
+  top: 30.2px;
+  width: 783.4px;
+  height: 530.8px;
+  transform: rotate(28.33deg);
 }
 
 .main-banner__light-small {
   left: -120px;
-  top: 172px;
-  width: 386px;
-  height: 285px;
+  top: 172.4px;
+  width: 385.7px;
+  height: 284.5px;
   transform: rotate(28.33deg);
 }
 
+/* Картинка: у текущего крупнее — рамка плавно меняется */
+.main-banner__image {
+  left: var(--image-left);
+  top: var(--image-top);
+  width: var(--image-width);
+  height: var(--image-height);
+  transition:
+    left var(--banner-ease),
+    top var(--banner-ease),
+    width var(--banner-ease),
+    height var(--banner-ease);
+}
+
 .main-banner--account .main-banner__image {
-  left: -40.5px;
-  top: 142.3px;
-  width: 300px;
-  height: 206.3px;
+  --image-left: -43px;
+  --image-top: 157px;
+  --image-width: 302px;
+  --image-height: 207px;
+
   object-fit: cover;
 }
 
-/* «16,3%» растянут по рамке — как в макете; у серого поверх второй слой */
+.main-banner--account.main-banner--active .main-banner__image {
+  --image-top: 157.1px;
+  --image-width: 330px;
+  --image-height: 227px;
+}
+
+/* «16,3%» растянут по рамке — как в макете; у серого поверх второй слой.
+   Серый текущим в макете не нарисован — как синий */
 .main-banner--deposit .main-banner__image,
 .main-banner--deposit-grey .main-banner__image {
-  left: -58.5px;
-  top: 120.5px;
-  width: 337px;
-  height: 244px;
+  --image-left: -58px;
+  --image-top: 121px;
+  --image-width: 337px;
+  --image-height: 244px;
+}
+
+.main-banner--deposit.main-banner--active .main-banner__image,
+.main-banner--deposit-grey.main-banner--active .main-banner__image {
+  --image-left: -64px;
+  --image-top: 122px;
+  --image-width: 363px;
+  --image-height: 262px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-banner {
+    --banner-ease: 0ms;
+  }
 }
