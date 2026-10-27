@@ -31,7 +31,7 @@ Local — адрес для компьютера, Network — для телеф�
 |---|---|---|
 | `/` | главная: баннеры каруселью, быстрые ссылки, продукты | [docs/screens/main.md](docs/screens/main.md) |
 | `/main-v3` | главная, вариант 3: баннеры лентой с наклоном | [docs/screens/main.md](docs/screens/main.md#вариант-3-лента-с-наклоном) |
-| `/main-v5` | главная, вариант 5: соседние баннеры того же размера, иллюстрация поднимается | [docs/screens/main.md](docs/screens/main.md#вариант-5-соседние-того-же-размера) |
+| `/main-v5` | главная, вариант 5: соседние баннеры того же размера | [docs/screens/main.md](docs/screens/main.md#вариант-5-соседние-того-же-размера) |
 | `/canvas` | доска со всеми экранами, не для респондентов | [docs/screens/canvas.md](docs/screens/canvas.md) |
 | `/kit` | ведет на сайт дизайн-системы | — |
 | любой другой | «Такого экрана нет», служебный | [docs/screens/not-found.md](docs/screens/not-found.md) |

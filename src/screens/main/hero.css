@@ -10,7 +10,8 @@
   /* Шаг между центрами баннеров, как в разделе 12 макета: половина текущего
      130 + зазор 8 + половина соседнего 118 */
   --banner-step: 256px;
-  --banner-move-ms: 600ms;
+  /* Смена баннера за 500 мс — решение дизайнера, у всех вариантов */
+  --banner-move-ms: 500ms;
 
   position: sticky;
   top: 0;
@@ -142,22 +143,13 @@
   pointer-events: none;
 }
 
-/* Параллакс — решение дизайнера: легкий, почти незаметный подъем. Иллюстрация
-   едет вместе с карточкой; у соседних она на 6 ниже, у приехавшего баннера,
-   когда карточка почти подъехала, плавно поднимается на место. Только
-   переходом, без скачков. На ленте с наклоном (/main-v3) параллакса нет */
-.main-hero:not(.main-hero--tilt, .main-hero--flat) .main-hero__slot .main-banner__image {
-  transform: translateY(6px);
-  transition:
-    translate var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 500ms ease-out;
-}
-
-.main-hero:not(.main-hero--tilt, .main-hero--flat) .main-hero__slot.is-active .main-banner__image {
+/* Без параллакса на всех экранах — решение дизайнера: иллюстрация стоит в
+   карточке на месте и только едет (и поворачивается) вместе с ней. У соседних —
+   как у текущего, без подгонки под уменьшенную карточку из макета */
+.main-hero.main-hero .main-hero__slot .main-banner :is(.main-banner__picture, .main-banner__image) {
   transform: none;
-  transition:
-    translate var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 900ms cubic-bezier(0.25, 0.1, 0.25, 1) calc(var(--banner-move-ms) * 0.6);
+  translate: none;
+  transition: none;
 }
 
 /* Пока тянут пальцем, лента и картинки идут за ним без задержки */
@@ -176,7 +168,6 @@
 .main-hero--tilt {
   --banner-step: 238px;
   --tilt-angle: 30deg;
-  --banner-move-ms: 550ms;
   --banner-ease: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
@@ -208,20 +199,9 @@
   opacity: 0.85;
 }
 
-/* Иллюстрация без своей анимации — решение дизайнера: стоит в карточке на
-   месте и только едет и поворачивается вместе с ней. У соседних — как у
-   текущего, без подгонки по макету */
-.main-hero.main-hero--tilt .main-hero__slot .main-banner :is(.main-banner__picture, .main-banner__image) {
-  transform: none;
-  translate: none;
-  transition: none;
-}
-
 /* ——— Соседние того же размера (/main-v5), раздел 12, 22878:57650 ———
    Все карточки 260 × 354, как текущая: соседние не уменьшаются, стоят через
-   зазор 8 — шаг 260 + 8. При смене лента едет на шаг, а иллюстрация
-   приехавшего баннера чуть поднимается — на 12, у уехавшего так же опускается
-   (решение дизайнера). */
+   зазор 8 — шаг 260 + 8. При смене лента едет на шаг. */
 .main-hero--flat {
   --banner-step: 268px;
 }
@@ -233,20 +213,6 @@
 
 .main-hero--flat .main-hero__slot .main-banner__content {
   width: 212px;
-  transform: none;
-}
-
-.main-hero--flat .main-hero__slot .main-banner__picture {
-  transform: none;
-}
-
-.main-hero.main-hero--flat .main-hero__slot .main-banner .main-banner__image {
-  transform: translateY(12px);
-  translate: none;
-  transition: transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-
-.main-hero.main-hero--flat .main-hero__slot.is-active .main-banner .main-banner__image {
   transform: none;
 }
 
@@ -318,11 +284,6 @@
   }
 
   .main-hero__dot {
-    transition: none;
-  }
-
-  .main-hero:not(.main-hero--tilt) .main-hero__slot:is(*, .is-active) .main-banner__image {
-    transform: none;
     transition: none;
   }
 }

@@ -48,8 +48,7 @@ function offsetOf(slot: number, position: number) {
  * hero.css (`.main-hero--tilt`).
  *
  * `slider="flat"` — вариант `/main-v5` (раздел 12, 22878:57650): соседние того
- * же размера, что текущий, при смене иллюстрация поднимается на 12 —
- * `.main-hero--flat` в hero.css.
+ * же размера, что текущий, — `.main-hero--flat` в hero.css.
  */
 export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
   const [params] = useSearchParams()
