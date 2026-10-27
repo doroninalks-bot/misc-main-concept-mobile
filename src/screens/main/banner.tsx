@@ -7,35 +7,24 @@ import "./banner.css"
 const IMAGES = "/assets/images/misc-main-concept-mobile/banners"
 
 /**
- * Баннер героя: цветная карточка с подсветкой и иллюстрацией. Макет — раздел 9
- * (22797:43983 и 22797:44638): текущий 260 × 354, остальные 236 × 322.
+ * Баннер героя: карточка с градиентом и иллюстрацией. Макет — раздел 12
+ * (22878:39553), компонент «banners»: текущий 260 × 354, остальные 236 × 322.
  * Раскладка — по текущему, остальные уменьшены масштабом: на телефоне так
- * переход плавный. Текст у всех того же размера, у текущего другая подсветка
- * и крупнее картинка — слои в banner.css.
+ * переход плавный. Текст у всех того же размера — слои в banner.css.
  */
 export function HeroBanner({ banner, active = false }: { banner: Banner; active?: boolean }) {
   const { id } = banner
 
   return (
     <article className={cx("main-banner", `main-banner--${id}`, active && "main-banner--active")}>
-      <span className="main-banner__art" aria-hidden="true">
-        <img className="main-banner__light" src={`${IMAGES}/${LIGHTS[id]}.svg`} alt="" />
-        {/* Серый текущим в макете не нарисован — та же подсветка */}
+      {/* Иллюстрация в рамке из макета, обрезана сверху. У
+          синего и серого в макете одна картинка */}
+      <span className="main-banner__picture" aria-hidden="true">
         <img
-          className="main-banner__light-active"
-          src={`${IMAGES}/${LIGHTS[id]}${id === "deposit-grey" ? "" : "-active"}.svg`}
+          className="main-banner__image"
+          src={`${IMAGES}/art-${id === "account" ? "account" : "deposit"}.png`}
           alt=""
         />
-        {id === "deposit" && <img className="main-banner__light-small" src={`${IMAGES}/blue-light-small.svg`} alt="" />}
-        {/* Картинки в отдельном слое — его двигает параллакс карусели */}
-        <span className="main-banner__picture">
-          <img
-            className="main-banner__image"
-            src={`${IMAGES}/${id === "account" ? "account" : "deposit"}.png`}
-            alt=""
-          />
-          {id === "deposit-grey" && <img className="main-banner__image" src={`${IMAGES}/deposit-top.png`} alt="" />}
-        </span>
       </span>
       <div className="main-banner__content">
         <h2 className="main-banner__title text-h4">{banner.title}</h2>
@@ -43,10 +32,4 @@ export function HeroBanner({ banner, active = false }: { banner: Banner; active?
       </div>
     </article>
   )
-}
-
-const LIGHTS = {
-  account: "purple-light",
-  deposit: "blue-light",
-  "deposit-grey": "grey-light",
 }

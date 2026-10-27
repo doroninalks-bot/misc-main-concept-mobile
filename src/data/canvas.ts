@@ -50,22 +50,4 @@ export const scenarios: CanvasItem[] = [
       },
     ],
   },
-  {
-    title: "Главная, вариант 4: размыта иллюстрация",
-    description:
-      "Та же карусель, что на главной, но у соседних баннеров размыта только иллюстрация: текст и цвет четкие. Экран /main-v4.",
-    steps: [
-      {
-        title: "Главная",
-        note: "Интерактив",
-        states: [
-          { title: "Баннеры меняются", frames: [{ route: "/main-v4", label: "Mobile", ...PHONE }] },
-          {
-            title: "Баннер «Войдите в аккаунт»",
-            frames: [{ route: "/main-v4?slide=account", label: "Mobile", ...PHONE }],
-          },
-        ],
-      },
-    ],
-  },
 ]

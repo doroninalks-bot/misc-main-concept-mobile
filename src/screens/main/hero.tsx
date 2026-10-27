@@ -1,9 +1,9 @@
 import { useRef, useState, type CSSProperties, type PointerEvent } from "react"
 import { useSearchParams } from "react-router"
 
-import { Button, SiteHeaderLogo, cx, maskIcon } from "@banki/design-system"
+import { SiteHeaderLogo, cx, maskIcon } from "@banki/design-system"
 
-import { BANNER_START, HERO_INTERVAL_MS, banners } from "@/data/main"
+import { BANNER_START, HERO_INTERVAL_MS, banners, type BannerId } from "@/data/main"
 
 import { HeroBanner } from "./banner"
 
@@ -38,7 +38,7 @@ function offsetOf(slot: number, position: number) {
  * Герой главной: шапка на цвете и баннеры каруселью по центру. Текущий крупнее,
  * соседние меньше выглядывают по бокам. Смена — сама каждые 6 секунд (полоса в пагинации), свайпом и
  * нажатием на соседний баннер или точку: лента едет, текущий уменьшается,
- * следующий вырастает, картинки внутри отстают — параллакс.
+ * следующий вырастает, иллюстрация едет вместе с карточкой.
  *
  * `?slide=<id баннера>` — нужный баннер по центру без смены, для рамок канваса.
  *
@@ -46,10 +46,8 @@ function offsetOf(slot: number, position: number) {
  * лента с наклоном. Соседние стоят с зазором и повернуты в 3D к центру; при
  * смене лента едет, карточки на ходу разворачиваются. Разница — только в
  * hero.css (`.main-hero--tilt`).
- *
- * `blurArt` — вариант `/main-v4`: у соседних размыта только иллюстрация.
  */
-export function Hero({ slider = "coverflow", blurArt = false }: { slider?: HeroSlider; blurArt?: boolean }) {
+export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
   const [params] = useSearchParams()
   const pinned = banners.findIndex((banner) => banner.id === params.get("slide"))
   const autoplay = pinned < 0
@@ -97,7 +95,7 @@ export function Hero({ slider = "coverflow", blurArt = false }: { slider?: HeroS
 
   return (
     <section
-      className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`, blurArt && "main-hero--blur-art")}
+      className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`)}
       // Фон в цвет текущего баннера — hero.css по data-banner
       data-banner={banners[active].id}
       aria-label="Баннеры"
@@ -111,9 +109,7 @@ export function Hero({ slider = "coverflow", blurArt = false }: { slider?: HeroS
       <header className="main-hero__header">
         <SiteHeaderLogo className="main-hero__logo" />
         <div className="main-hero__actions">
-          <Button size="h36" variant="tertiary-inverse" className="main-hero__login">
-            Войти
-          </Button>
+          <HeaderIcon icon="user-16" label="Войти" />
           <HeaderIcon icon="search-16" label="Поиск" />
           <HeaderIcon icon="menu-16" label="Меню" />
         </div>
@@ -166,43 +162,78 @@ export function Hero({ slider = "coverflow", blurArt = false }: { slider?: HeroS
             )}
           </button>
         ))}
+        <span className="main-hero__dot main-hero__dot--more" aria-hidden="true" />
       </div>
     </section>
   )
 }
 
+/** Контур пятен фона из макета — у верхнего и нижнего один */
+const BLOB =
+  "M233.5 15.44C78 -26.97 0 21.64 0 116.44C0 234.94 221.5 342.94 357.5 295.94C523.5 238.57 389 57.85 233.5 15.44Z"
+
+/** Цвета пятен у каждого баннера: большое в середине и светлое внизу */
+const GLOW: Record<BannerId, { middle: string; bottom: string }> = {
+  account: { middle: "#2e1563", bottom: "#9877f7" },
+  deposit: { middle: "#301c9f", bottom: "#5b8ffd" },
+  "deposit-grey": { middle: "#425797", bottom: "#84a1e3" },
+}
+
 /**
- * Свечение фона — три размытых пятна из макета (MobileBackground, 22797:43972).
- * SVG встроен, чтобы цвета пятен брались из hero.css по текущему баннеру и
- * плавно перетекали при смене.
+ * Фон героя — размытые пятна из макета (раздел 12, 22878:39553) в рамке экрана
+ * 375 × 680: темное сверху общее, а среднее и нижнее — в цвет баннера, по
+ * слою на каждый. Размытие макета 110, 250 и 200 — в SVG половина.
  */
 function HeroGlow() {
   return (
-    <svg className="main-hero__glow" width="1254" height="954" viewBox="0 0 1254.25 954.403" fill="none">
-      <g filter="url(#main-hero-blur-60)">
+    <>
+      <svg className="main-hero__glow" width="375" height="680" viewBox="0 0 375 680" fill="none">
+        <GlowFilter id="main-hero-blur-55" blur={55} />
         <path
-          className="main-hero__glow-base"
-          d="M895.663 277.137C934.426 421.803 808.059 581.357 613.415 633.512C418.77 685.666 229.556 610.672 190.793 466.007C152.03 321.341 287.54 193.392 482.184 141.237C676.829 89.0824 856.9 132.472 895.663 277.137Z"
+          d={BLOB}
+          fill="#17184a"
+          filter="url(#main-hero-blur-55)"
+          transform="matrix(0.97776 -0.20973 0.20973 0.97776 -31 -105.035)"
         />
-      </g>
-      <g className="main-hero__glow-accent" filter="url(#main-hero-blur-95)">
-        <path d="M465.061 305.146C355.438 217.036 236.011 281.319 190 324.474L302.169 764.403C509.937 729.116 943.708 653.893 1016.64 635.297C1089.57 616.702 968.471 396.191 898.803 288.26C799.899 330.601 574.684 393.255 465.061 305.146Z" />
-      </g>
-      <g filter="url(#main-hero-blur-95)">
-        <path
-          className="main-hero__glow-bright"
-          d="M684.183 332.738C798.183 343.938 829.683 328.071 831.183 318.738C978.183 220.238 1285.68 656.738 805.183 523.738C324.683 390.738 541.683 318.738 684.183 332.738Z"
-        />
-      </g>
-      <defs>
-        <filter id="main-hero-blur-60" x="0" y="0" width="1254.25" height="954.403" filterUnits="userSpaceOnUse">
-          <feGaussianBlur stdDeviation="60" />
-        </filter>
-        <filter id="main-hero-blur-95" x="0" y="0" width="1254.25" height="954.403" filterUnits="userSpaceOnUse">
-          <feGaussianBlur stdDeviation="95" />
-        </filter>
-      </defs>
-    </svg>
+      </svg>
+      {banners.map(({ id }) => (
+        <svg
+          key={id}
+          className={`main-hero__glow main-hero__glow--palette main-hero__glow--${id}`}
+          width="375"
+          height="680"
+          viewBox="0 0 375 680"
+          fill="none"
+        >
+          <GlowFilter id={`main-hero-blur-125-${id}`} blur={125} />
+          <GlowFilter id={`main-hero-blur-100-${id}`} blur={100} />
+          <ellipse
+            cx="334.709"
+            cy="231.114"
+            rx="334.709"
+            ry="231.114"
+            fill={GLOW[id].middle}
+            filter={`url(#main-hero-blur-125-${id})`}
+            transform="matrix(0.96718 0.2541 -0.2541 0.96718 -154.172 149.129)"
+          />
+          <path
+            d={BLOB}
+            fill={GLOW[id].bottom}
+            filter={`url(#main-hero-blur-100-${id})`}
+            transform="translate(94.5 390)"
+          />
+        </svg>
+      ))}
+    </>
+  )
+}
+
+/** Размытие с запасом по краям — иначе края пятна обрезаются */
+function GlowFilter({ id, blur }: { id: string; blur: number }) {
+  return (
+    <filter id={id} x="-1000" y="-1000" width="3000" height="3000" filterUnits="userSpaceOnUse">
+      <feGaussianBlur stdDeviation={blur} />
+    </filter>
   )
 }
 
