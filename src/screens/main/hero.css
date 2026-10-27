@@ -149,23 +149,21 @@
 }
 
 /* Баннер по центру экрана, сдвинут на свое место от текущего. Текущий —
-   260 × 354, соседние — 236 × 322 и размыты на 2,5 (banner.css), как в макете */
+   260 × 354, соседние — 236 × 322 (banner.css), как в макете. Соседние не
+   размыты — решение дизайнера */
 .main-hero__slot {
   position: absolute;
   top: 50%;
   left: 50%;
-  filter: blur(2.5px);
   transform: translate(calc(-50% + var(--offset) * var(--banner-step) + var(--drag, 0px)), -50%);
   transition:
     transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity var(--banner-move-ms) ease,
-    filter var(--banner-move-ms) ease;
+    opacity var(--banner-move-ms) ease;
   cursor: pointer;
 }
 
 .main-hero__slot.is-active {
   z-index: 1;
-  filter: none;
   transform: translate(calc(-50% + var(--drag, 0px)), -50%);
   cursor: grab;
 }
@@ -183,6 +181,19 @@
 .main-hero__slot .main-banner__picture {
   transform: translateX(calc(var(--offset) * 48px - var(--drag, 0px) * 0.2));
   transition: transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Вариант 4 (/main-v4) — решение дизайнера: у соседних размыта только
+   иллюстрация, на 2,5 на экране (карточка уменьшена в 0,91 — в ней 2,75).
+   Текст, подсветка и цвет четкие; при смене размытие плавно уходит */
+.main-hero--blur-art .main-hero__slot .main-banner__picture {
+  transition:
+    transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter var(--banner-move-ms) ease;
+}
+
+.main-hero--blur-art .main-hero__slot:not(.is-active) .main-banner__picture {
+  filter: blur(2.75px);
 }
 
 /* Пока тянут пальцем, лента и картинки идут за ним без задержки */

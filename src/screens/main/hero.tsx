@@ -36,7 +36,7 @@ function offsetOf(slot: number, position: number) {
 
 /**
  * Герой главной: шапка на цвете и баннеры каруселью по центру. Текущий крупнее,
- * соседние меньше и слегка размытые выглядывают по бокам. Смена — сама каждые 6 секунд (полоса в пагинации), свайпом и
+ * соседние меньше выглядывают по бокам. Смена — сама каждые 6 секунд (полоса в пагинации), свайпом и
  * нажатием на соседний баннер или точку: лента едет, текущий уменьшается,
  * следующий вырастает, картинки внутри отстают — параллакс.
  *
@@ -46,8 +46,10 @@ function offsetOf(slot: number, position: number) {
  * лента с наклоном. Соседние стоят с зазором и повернуты в 3D к центру; при
  * смене лента едет, карточки на ходу разворачиваются. Разница — только в
  * hero.css (`.main-hero--tilt`).
+ *
+ * `blurArt` — вариант `/main-v4`: у соседних размыта только иллюстрация.
  */
-export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
+export function Hero({ slider = "coverflow", blurArt = false }: { slider?: HeroSlider; blurArt?: boolean }) {
   const [params] = useSearchParams()
   const pinned = banners.findIndex((banner) => banner.id === params.get("slide"))
   const autoplay = pinned < 0
@@ -60,6 +62,12 @@ export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
 
   const active = ((position % count) + count) % count
   const go = (step: number) => setPosition((value) => value + step)
+  // К баннеру по точке — коротким путем по кругу: с третьего на первый лента
+  // едет на шаг вперед, а не на два назад — решение дизайнера
+  const goTo = (index: number) => {
+    const step = index - active
+    go(step > count / 2 ? step - count : step < -count / 2 ? step + count : step)
+  }
 
   const onPointerDown = (event: PointerEvent) => {
     start.current = event.clientX
@@ -89,7 +97,7 @@ export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
 
   return (
     <section
-      className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`)}
+      className={cx("main-hero", slider !== "coverflow" && `main-hero--${slider}`, blurArt && "main-hero--blur-art")}
       // Фон в цвет текущего баннера — hero.css по data-banner
       data-banner={banners[active].id}
       aria-label="Баннеры"
@@ -145,7 +153,7 @@ export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
             className={cx("main-hero__dot", index === active && "is-active")}
             aria-label={`Баннер ${index + 1} из ${count}`}
             aria-current={index === active}
-            onClick={() => go(index - active)}
+            onClick={() => goTo(index)}
           >
             {index === active && (
               // key с позицией: полоса бежит заново после любой смены, конец полосы — смена

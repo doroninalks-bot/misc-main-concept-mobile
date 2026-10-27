@@ -12,12 +12,13 @@ import "./main.css"
  * быстрые ссылки и плитки «Наши продукты».
  *
  * `slider` — вид слайдера баннеров: `coverflow` на `/`, `tilt` на `/main-v3`
- * (экран `src/screens/main-v3/`).
+ * (экран `src/screens/main-v3/`). `blurArt` — у соседних баннеров размыта
+ * только иллюстрация, `/main-v4`.
  */
-export function MainScreen({ slider = "coverflow" }: { slider?: HeroSlider }) {
+export function MainScreen({ slider = "coverflow", blurArt = false }: { slider?: HeroSlider; blurArt?: boolean }) {
   return (
     <div className="main">
-      <Hero slider={slider} />
+      <Hero slider={slider} blurArt={blurArt} />
 
       <main className="main__sheet">
         <div className="main__top">

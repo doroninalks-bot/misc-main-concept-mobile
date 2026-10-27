@@ -13,6 +13,7 @@ import type { ReactNode } from "react"
 
 import { MainScreen } from "@/screens/main/main"
 import { MainV3Screen } from "@/screens/main-v3/main-v3"
+import { MainV4Screen } from "@/screens/main-v4/main-v4"
 
 export interface ScreenRoute {
   path: string
@@ -24,4 +25,5 @@ export interface ScreenRoute {
 export const routes: ScreenRoute[] = [
   { path: "/", title: "Главная", element: <MainScreen /> },
   { path: "/main-v3", title: "Главная, вариант 3", element: <MainV3Screen /> },
+  { path: "/main-v4", title: "Главная, вариант 4", element: <MainV4Screen /> },
 ]
