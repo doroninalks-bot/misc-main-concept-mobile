@@ -12,7 +12,7 @@ import "./main.css"
  * быстрые ссылки и плитки «Наши продукты».
  *
  * `slider` — вид слайдера баннеров: `coverflow` на `/`, `tilt` на `/main-v3`
- * (экран `src/screens/main-v3/`).
+ * (экран `src/screens/main-v3/`), `flat` на `/main-v5` (`src/screens/main-v5/`).
  */
 export function MainScreen({ slider = "coverflow" }: { slider?: HeroSlider }) {
   return (

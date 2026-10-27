@@ -11,7 +11,7 @@ import "./hero.css"
 
 const HEADER_ICONS = "/assets/icons/header"
 
-export type HeroSlider = "coverflow" | "tilt"
+export type HeroSlider = "coverflow" | "tilt" | "flat"
 
 /** Свайп дальше этого — смена баннера */
 const SWIPE_THRESHOLD = 50
@@ -46,6 +46,10 @@ function offsetOf(slot: number, position: number) {
  * лента с наклоном. Соседние стоят с зазором и повернуты в 3D к центру; при
  * смене лента едет, карточки на ходу разворачиваются. Разница — только в
  * hero.css (`.main-hero--tilt`).
+ *
+ * `slider="flat"` — вариант `/main-v5` (раздел 12, 22878:57650): соседние того
+ * же размера, что текущий, при смене иллюстрация поднимается на 12 —
+ * `.main-hero--flat` в hero.css.
  */
 export function Hero({ slider = "coverflow" }: { slider?: HeroSlider }) {
   const [params] = useSearchParams()

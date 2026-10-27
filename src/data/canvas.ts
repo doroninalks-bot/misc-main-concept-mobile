@@ -50,4 +50,22 @@ export const scenarios: CanvasItem[] = [
       },
     ],
   },
+  {
+    title: "Главная, вариант 5: соседние того же размера",
+    description:
+      "Соседние баннеры того же размера, что текущий, через зазор 8. При смене иллюстрация приехавшего баннера чуть поднимается, у уехавшего опускается. Экран /main-v5.",
+    steps: [
+      {
+        title: "Главная",
+        note: "Интерактив",
+        states: [
+          { title: "Баннеры меняются", frames: [{ route: "/main-v5", label: "Mobile", ...PHONE }] },
+          {
+            title: "Баннер «Войдите в аккаунт»",
+            frames: [{ route: "/main-v5?slide=account", label: "Mobile", ...PHONE }],
+          },
+        ],
+      },
+    ],
+  },
 ]
