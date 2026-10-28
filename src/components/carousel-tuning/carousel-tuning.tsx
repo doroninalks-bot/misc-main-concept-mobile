@@ -27,7 +27,7 @@ export type CarouselTuningValues = {
   parallax: number
   /** Ширина текста баннера меняется плавно; выкл (по умолчанию) — переключается разом на середине пути, зато без пересчета строк каждый кадр */
   smoothText: boolean
-  /** Сколько пикселей нужно провести пальцем, чтобы перелистнуть баннер; короче — баннер возвращается на место */
+  /** Сколько пикселей нужно провести пальцем, чтобы перелистнуть баннер; короче — баннер возвращается на место. 0 — листает любой свайп (от 4 px, меньше — нажатие) */
   swipeDistance: number
   /** Инерция свайпа: время затухания, мс — чем больше, тем дольше едет лента после броска */
   momentumTau: number
@@ -49,7 +49,7 @@ export const TUNING_DEFAULTS: CarouselTuningValues = {
   settle: 0.16,
   parallax: 40,
   smoothText: false,
-  swipeDistance: 40,
+  swipeDistance: 0,
   momentumTau: 100,
   momentumPower: 1,
   momentumMax: 12,
@@ -185,7 +185,7 @@ export function CarouselTuning({
           <Range
             label="Свайп: путь пальца для перелистывания"
             unit="px"
-            min={10}
+            min={0}
             max={200}
             step={5}
             value={values.swipeDistance}
