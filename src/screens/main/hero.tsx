@@ -38,9 +38,6 @@ function offsetOf(slot: number, position: number) {
   return offset > total / 2 ? offset - total : offset
 }
 
-/** Свайп короче этого, в долях шага (~40 px), возвращает баннер на место */
-const SWIPE_MIN = 0.15
-
 /** Прозрачность ушедших слотов: невидимо глазу, но слой остается нарисованным */
 const HIDDEN_FADE = 0.001
 
@@ -213,6 +210,38 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
   useLayoutEffect(paint, [])
   useEffect(() => stop, [])
 
+  // touch-action: pan-y решает направление только в начале касания: свайп вбок
+  // с небольшим уходом пальца вниз браузер подхватывал как прокрутку страницы —
+  // тянулся рефреш, уезжала нижняя часть экрана. Как только жест понят как
+  // горизонтальный, прокрутку страницы гасим до конца касания. Слушатель
+  // нативный: в React touchmove пассивный, preventDefault там не работает
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    let start: { x: number; y: number } | null = null
+    let horizontal: boolean | null = null
+    const onStart = (event: TouchEvent) => {
+      start = { x: event.touches[0].clientX, y: event.touches[0].clientY }
+      horizontal = null
+    }
+    const onMove = (event: TouchEvent) => {
+      if (!start) return
+      if (horizontal === null) {
+        const dx = Math.abs(event.touches[0].clientX - start.x)
+        const dy = Math.abs(event.touches[0].clientY - start.y)
+        if (dx < 4 && dy < 4) return
+        horizontal = dx > dy
+      }
+      if (horizontal && event.cancelable) event.preventDefault()
+    }
+    track.addEventListener("touchstart", onStart, { passive: true })
+    track.addEventListener("touchmove", onMove, { passive: false })
+    return () => {
+      track.removeEventListener("touchstart", onStart)
+      track.removeEventListener("touchmove", onMove)
+    }
+  }, [])
+
   const onPointerDown = (event: PointerEvent) => {
     stop()
     // Шаг ленты в пикселях берем из CSS: он разный у вариантов
@@ -258,12 +287,17 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
     const base = Math.round(d.pos)
     const delta = pos.current - d.pos
 
-    const { momentumTau, momentumPower, momentumMax } = tuningRef.current
+    const { momentumTau, momentumPower, momentumMax, swipeDistance } = tuningRef.current
+    // Свайп короче порога из панели возвращает баннер на место, даже быстрый
+    if (Math.abs(delta) * d.step < swipeDistance) {
+      glide(base)
+      return
+    }
     // Куда доехала бы лента, затухая с той же скоростью: путь = скорость × τ
     const thrown = Math.max(-momentumMax, Math.min(momentumMax, (v * momentumPower * momentumTau) / 1000))
     let to = Math.round(pos.current + thrown)
-    // Быстрый короткий свайп (от ~40 px) листает на соседний, а не возвращает назад
-    if (to === base && Math.abs(delta) > SWIPE_MIN) to = base + Math.sign(delta)
+    // Свайп от порога листает хотя бы на соседний, а не возвращает назад
+    if (to === base) to = base + Math.sign(delta)
     glide(to)
   }
 
