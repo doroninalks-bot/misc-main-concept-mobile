@@ -22,7 +22,7 @@
 
 /* ——— Фон: размытые пятна в цвет текущего баннера ———
    Макет — раздел 9, MobileBackground (22797:43972 и 22797:44271): база и три
-   размытых пятна. У фиолетовых баннеров (вклад, займ) фон фиолетовый, у синего (вход) —
+   размытых пятна. У фиолетовых баннеров фон фиолетовый, у синих —
    синий. При смене цвета плавно перетекают.
    Цвета — часть иллюстрации, вне токенов. */
 /* Смена цвета фона — переход прозрачности слоев, он идет на видеокарте
@@ -30,7 +30,7 @@
    кадр: браузер пересчитывал стили всего героя, и смены с участием
    «Войдите в аккаунт» (там фон меняется) шли рывками, а между «Вкладами» (фон
    тот же) — плавно. Длительность и кривая — из панели «Плавность»: --tone-ms,
-   --tone-curve. Тон героя — data-tone (blue у «Войдите в аккаунт», purple у вклада и займа) */
+   --tone-curve. Тон героя — data-tone, по цвету текущего баннера (tone в src/data/main.ts) */
 .main-hero {
   --tone-ms: 500ms;
   --tone-curve: cubic-bezier(0.65, 0, 0.35, 1);
@@ -288,7 +288,7 @@
    отключается — чтобы сравнить */
 .main-hero[data-gpu] .main-hero__slot,
 .main-hero[data-gpu] .main-banner,
-.main-hero[data-gpu] .main-banner::after,
+.main-hero[data-gpu] .main-banner__crop,
 .main-hero[data-gpu] .main-banner__content,
 .main-hero[data-gpu] .main-banner__picture,
 .main-hero[data-gpu] .main-banner__image {
@@ -298,7 +298,7 @@
 /* Ширина текста плавно — по просьбе из панели: строки пересчитываются каждый
    кадр, на слабом телефоне это рывки */
 .main-hero[data-smooth-text] .main-banner__content {
-  width: calc(212px - 25px * var(--banner-away));
+  width: calc(212px - 24px * var(--banner-away));
 }
 
 .main-hero[data-lite] .main-hero__dot {

@@ -308,7 +308,7 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
       data-banner={banners[active].id}
       // Фон меняется только если включено в панели — по умолчанию выключено,
       // решение дизайнера: смена фона давала подвисание на смене баннера
-      data-tone={tuning.toneChange && banners[active].id !== "account" ? "purple" : "blue"}
+      data-tone={tuning.toneChange ? banners[active].tone : "blue"}
       data-smooth-text={tuning.smoothText || undefined}
       data-gpu={tuning.gpuLayers || undefined}
       data-lite={tuning.lite || undefined}

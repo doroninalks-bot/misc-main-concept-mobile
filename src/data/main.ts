@@ -6,23 +6,45 @@
 const IMAGES = "/assets/images/misc-main-concept-mobile"
 const PRODUCTS = `${IMAGES}/products`
 
-export type BannerId = "account" | "deposit" | "deposit-grey"
+export type BannerId = "account" | "deposit" | "bonus" | "loan" | "cashback" | "osago" | "review"
 
 export interface Banner {
   id: BannerId
+  /** Перенос строки `\n` — как в макете */
   title: string
   text: string
+  /** Градиент карточки; под него же фон героя, если включена смена цвета */
+  tone: "blue" | "purple"
 }
 
 /**
- * Баннеры героя — каруселью по центру, по кругу. Градиент и иллюстрация
- * у каждого свои — в `src/screens/main/banner.css` по `id`.
+ * Баннеры героя — каруселью по центру, по кругу, в порядке компонента
+ * «banners» (22874:31062). Иллюстрация у каждого своя — в
+ * `src/screens/main/banner.tsx` и `banner.css` по `id`.
  */
 export const banners: Banner[] = [
-  { id: "account", title: "Войдите в аккаунт", text: "Получите персональные предложения" },
-  { id: "deposit", title: "Вклад с Банки.ру выгоднее", text: "Бонус до\u00a0+1,5% к\u00a0ставке банка" },
-  // Третий — про займ, фиолетовый, как вклад (решение дизайнера, текст — как на banki.ru)
-  { id: "deposit-grey", title: "Оформите первый займ", text: "без\u00a0процентов" },
+  { id: "account", title: "Войдите в аккаунт", text: "Получите персональные предложения", tone: "blue" },
+  {
+    id: "deposit",
+    title: "Вклад с Банки.ру\nвыгоднее",
+    text: "Бонус до\u00a0+1,5% к\u00a0ставке банка",
+    tone: "purple",
+  },
+  {
+    id: "bonus",
+    title: "Бонус 1000\u00a0Б",
+    text: "за оформление карты\nв приложении 1\u00a0Б\u00a0=\u00a01\u00a0₽",
+    tone: "blue",
+  },
+  { id: "loan", title: "Оформите первый займ", text: "без\u00a0процентов", tone: "purple" },
+  { id: "cashback", title: "Кэшбэк до\u00a050%", text: "при покупке полиса ипотечного страхования", tone: "blue" },
+  { id: "osago", title: "ОСАГО с выгодой\nдо\u00a086%", text: "и гарантией низкой цены", tone: "purple" },
+  {
+    id: "review",
+    title: "Получите до 5000\u00a0Б за отзыв об автодилере",
+    text: "Участвуйте в\u00a0конкурсе Диалога и\u00a0заберите выгоду",
+    tone: "blue",
+  },
 ]
 
 /** С какого баннера начинается карусель */
