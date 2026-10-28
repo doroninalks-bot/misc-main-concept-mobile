@@ -18,7 +18,7 @@ export const scenarios: CanvasItem[] = [
   {
     title: "Главная, мобильный концепт",
     description:
-      "Баннеры каруселью по центру: сами меняются каждые 6 секунд, едут и увеличиваются; листаются свайпом и нажатием на соседний. Соседние не размыты.",
+      "Баннеры каруселью по центру: сами меняются каждые 6 секунд, едут и увеличиваются; листаются нажатием на соседний и свайпом по инерции, как колесо выбора времени в iOS: сильный бросок пролистывает сразу несколько баннеров.",
     steps: [
       {
         title: "Главная",
@@ -28,41 +28,6 @@ export const scenarios: CanvasItem[] = [
           { title: "Баннер «Войдите в аккаунт»", frames: [{ route: "/?slide=account", label: "Mobile", ...PHONE }] },
           { title: "Баннер «Вклад», синий", frames: [{ route: "/?slide=deposit", label: "Mobile", ...PHONE }] },
           { title: "Баннер «Вклад», серый", frames: [{ route: "/?slide=deposit-grey", label: "Mobile", ...PHONE }] },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Главная, вариант 3: лента с наклоном",
-    description:
-      "Баннеры лентой с наклоном: соседние повернуты в 3D к центру, при смене лента едет и карточки разворачиваются. Экран /main-v3.",
-    steps: [
-      {
-        title: "Главная",
-        note: "Интерактив",
-        states: [
-          { title: "Баннеры меняются", frames: [{ route: "/main-v3", label: "Mobile", ...PHONE }] },
-          {
-            title: "Баннер «Войдите в аккаунт»",
-            frames: [{ route: "/main-v3?slide=account", label: "Mobile", ...PHONE }],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Главная, вариант 5: соседние того же размера",
-    description: "Соседние баннеры того же размера, что текущий, через зазор 8. Экран /main-v5.",
-    steps: [
-      {
-        title: "Главная",
-        note: "Интерактив",
-        states: [
-          { title: "Баннеры меняются", frames: [{ route: "/main-v5", label: "Mobile", ...PHONE }] },
-          {
-            title: "Баннер «Войдите в аккаунт»",
-            frames: [{ route: "/main-v5?slide=account", label: "Mobile", ...PHONE }],
-          },
         ],
       },
     ],

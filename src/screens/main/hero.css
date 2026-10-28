@@ -1,5 +1,5 @@
 /**
- * Герой главной. Высота 680 — как в макете: низ уходит под белую подложку.
+ * Герой главной. Высота 691 — как в макете: низ уходит под белую подложку.
  * Фон лежит на сцене 375 по центру, чтобы на телефонах шире 375 композиция
  * не разъезжалась, а цвет тянется во всю ширину.
  */
@@ -7,32 +7,54 @@
 /* Герой прилипает к верху, белая подложка с продуктами наезжает на него при
    прокрутке — решение дизайнера */
 .main-hero {
-  /* Шаг между центрами баннеров, как в разделе 12 макета: половина текущего
-     130 + зазор 8 + половина соседнего 118 */
-  --banner-step: 256px;
-  /* Смена баннера за 500 мс — решение дизайнера, у всех вариантов */
-  --banner-move-ms: 500ms;
+  /* Шаг между центрами баннеров, как в разделе 9 макета: половина текущего
+     130 + зазор 16 + половина соседнего 118 */
+  --banner-step: 264px;
 
   position: sticky;
   top: 0;
   width: 100%;
-  height: 680px;
+  height: 691px;
   overflow: hidden;
   color: var(--text-on-color-strong);
   isolation: isolate;
 }
 
-/* ——— Фон: база и три размытых пятна ———
-   Макет — раздел 12 (22878:39553): база #170c52, темное пятно сверху и два
-   пятна в цвет текущего баннера — фиолетовые, синие или серо-голубые. Пятна
-   каждого цвета — свой слой, при смене баннера слои плавно сменяют друг
-   друга прозрачностью: размытие не пересчитывается на каждом кадре.
+/* ——— Фон: размытые пятна в цвет текущего баннера ———
+   Макет — раздел 9, MobileBackground (22797:43972 и 22797:44271): база и три
+   размытых пятна. У фиолетового баннера фон фиолетовый, у синего и серого —
+   синий (серого фона в макете нет). При смене цвета плавно перетекают.
    Цвета — часть иллюстрации, вне токенов. */
+/* Смена цвета фона — переход прозрачности слоев, он идет на видеокарте
+   независимо от главного потока. Раньше долю синего писал в героя JS каждый
+   кадр: браузер пересчитывал стили всего героя, и смены с участием
+   «Войдите в аккаунт» (там фон меняется) шли рывками, а между «Вкладами» (фон
+   тот же) — плавно. Длительность и кривая — из панели «Плавность»: --tone-ms,
+   --tone-curve. Тон героя — data-tone (purple у «Войдите в аккаунт», blue у «Вкладов») */
+.main-hero {
+  --tone-ms: 500ms;
+  --tone-curve: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
 .main-hero__bg {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-color: #170c52;
+  background-color: #1a0b52;
+}
+
+.main-hero__bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #090d4a;
+  opacity: 0;
+  will-change: opacity;
+  transition: opacity var(--tone-ms) var(--tone-curve);
+}
+
+.main-hero[data-tone="blue"] .main-hero__bg::before {
+  opacity: 1;
 }
 
 .main-hero__stage {
@@ -42,28 +64,69 @@
   width: 375px;
   height: 100%;
   transform: translateX(-50%);
+  /* Свой слой: тяжелое размытие рисуется один раз, а не на каждом кадре
+     прокрутки липкого героя — иначе на телефоне скролл идет рывками */
+  will-change: transform;
 }
 
-/* SVG по рамке экрана 375 × 680 из макета; пятна за ее краями видны на
-   телефонах шире */
+/* Рамка фона в макете — 375 × 494 в точке (385,7; 48,2) этого SVG */
 .main-hero__glow {
   position: absolute;
-  inset: 0 auto auto 0;
+  left: -385.683px;
+  top: -48.239px;
   display: block;
-  overflow: visible;
+  max-width: none;
   pointer-events: none;
 }
 
-.main-hero__glow--palette {
-  opacity: 0;
-  transition: opacity 900ms ease;
-  will-change: opacity;
+/* Свечение двух цветов лежит стопкой, и между ними перетекает только
+   прозрачность: размытие 95 на 1254 × 954 растрится один раз на слой, а не на
+   каждом кадре перелива цвета — иначе при смене баннера лента едет рывками.
+   Цвета фиксированные для слоя */
+.main-hero__glow--purple {
+  --hero-glow-base: #3d2299;
+  --hero-glow-accent: #d27bff;
+  --hero-glow-accent-opacity: 0.2;
+  --hero-glow-bright: #5b33c9;
+  opacity: 1;
 }
 
-.main-hero[data-banner="account"] .main-hero__glow--account,
-.main-hero[data-banner="deposit"] .main-hero__glow--deposit,
-.main-hero[data-banner="deposit-grey"] .main-hero__glow--deposit-grey {
+.main-hero[data-tone="blue"] .main-hero__glow--purple {
+  opacity: 0;
+}
+
+.main-hero__glow--blue {
+  --hero-glow-base: #183e9d;
+  --hero-glow-accent: #a677ff;
+  --hero-glow-accent-opacity: 0.4;
+  --hero-glow-bright: #1c3cc2;
+  opacity: 0;
+}
+
+.main-hero[data-tone="blue"] .main-hero__glow--blue {
   opacity: 1;
+}
+
+.main-hero__glow {
+  will-change: opacity;
+  transition: opacity var(--tone-ms) var(--tone-curve);
+}
+
+.main-hero__glow-base {
+  fill: var(--hero-glow-base);
+}
+
+.main-hero__glow-accent {
+  opacity: var(--hero-glow-accent-opacity);
+  fill: var(--hero-glow-accent);
+}
+
+.main-hero__glow-accent path {
+  fill: inherit;
+}
+
+.main-hero__glow-bright {
+  fill: var(--hero-glow-bright);
 }
 
 /* ——— Шапка на цвете ——— */
@@ -86,7 +149,13 @@
   gap: var(--indent-xs);
 }
 
-/* Кнопки шапки — 32 × 32 через 8: профиль, поиск, меню, как в макете */
+/* «Войти» — h32 из макета так же, как в шапке дизайн-системы: h36 с текстом
+   14/20 — поля 6 + 20 + 6 */
+.main-hero .main-hero__login {
+  --button-font-size: 14px;
+  --button-line-height: 20px;
+}
+
 .main-hero__action {
   display: flex;
   padding: var(--indent-xs);
@@ -117,111 +186,43 @@
   user-select: none;
 }
 
-/* Баннер по центру экрана, сдвинут на свое место от текущего. Текущий —
-   260 × 354, соседние — 236 × 322 (banner.css), как в макете. Соседние не
-   размыты — решение дизайнера */
+/* Положение каждого баннера считает hero.tsx каждый кадр и пишет в слот три
+   числа: --offset — на сколько шагов он от центра (дробное, во время движения),
+   --t — насколько он «текущий» (1 в центре, 0 на шаг и дальше), --fade —
+   видимость (за экраном 0). Масштаб, цвет, подсветка и параллакс баннера
+   выводятся из них непрерывно — без переключения классов, поэтому на смене
+   нет скачка. Соседние 236 × 322 не размыты — решение дизайнера */
 .main-hero__slot {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(calc(-50% + var(--offset) * var(--banner-step) + var(--drag, 0px)), -50%);
-  transition:
-    transform var(--banner-move-ms) cubic-bezier(0.22, 0.61, 0.36, 1),
-    opacity var(--banner-move-ms) ease;
+  transform: translate(calc(-50% + var(--offset, 0) * var(--banner-step)), -50%);
+  opacity: var(--fade, 1);
   cursor: pointer;
 }
 
 .main-hero__slot.is-active {
-  z-index: 1;
-  transform: translate(calc(-50% + var(--drag, 0px)), -50%);
   cursor: grab;
 }
 
 /* За экраном — прозрачные: перелет копии на другую сторону не виден */
 .main-hero__slot.is-hidden {
-  opacity: 0;
   pointer-events: none;
 }
 
-/* Без параллакса на всех экранах — решение дизайнера: иллюстрация стоит в
-   карточке на месте и только едет (и поворачивается) вместе с ней. У соседних —
-   как у текущего, без подгонки под уменьшенную карточку из макета */
-.main-hero.main-hero .main-hero__slot .main-banner :is(.main-banner__picture, .main-banner__image) {
-  transform: none;
-  translate: none;
-  transition: none;
+/* Параллакс — решение дизайнера: картинки баннера едут медленнее карточки.
+   У соседнего баннера картинка сдвинута наружу на 12, у текущего — на месте (решение дизайнера, было 48, 32, 64).
+   За пальцем картинка не отстает — иначе при быстром движении она «болтается»
+   отдельно от карточки. */
+.main-hero__slot .main-banner__picture {
+  transform: translateX(calc(var(--offset, 0) * var(--parallax-shift, 12px)));
 }
 
-/* Пока тянут пальцем, лента и картинки идут за ним без задержки */
-.main-hero__track.is-dragging .main-hero__slot,
-.main-hero__track.is-dragging .main-banner__image {
-  transition: none;
-}
-
-/* ——— Лента с наклоном (/main-v3), по референсу дизайнера ———
-   Текущий плоский и крупный по центру. Соседние — 0,9, стоят с зазором 8 и
-   повернуты к центру на 30°: внутренний край уходит вглубь. Не перекрываются
-   и не тускнеют. При смене лента плавно едет на шаг: уходящий на ходу
-   поворачивается, приходящий разворачивается к зрителю.
-   Шаг: половина текущего 130 + зазор 8 (на всех макетах) + видимая половина
-   повернутого соседа ~100. */
-.main-hero--tilt {
-  --banner-step: 238px;
-  --tilt-angle: 30deg;
-  --banner-ease: cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.main-hero--tilt .main-hero__track {
-  perspective: 900px;
-}
-
-.main-hero--tilt .main-hero__slot {
-  opacity: 1;
-  filter: none;
-  transform: translate(calc(-50% + var(--offset) * var(--banner-step) + var(--drag, 0px)), -50%)
-    rotateY(calc(var(--offset) * -1 * var(--tilt-angle))) scale(0.9);
-  transition:
-    transform var(--banner-move-ms) var(--banner-ease),
-    opacity var(--banner-move-ms) ease;
-}
-
-.main-hero--tilt .main-hero__slot.is-active {
-  transform: translate(calc(-50% + var(--drag, 0px)), -50%) rotateY(0deg) scale(1);
-}
-
-/* Дальние за экраном — прозрачные, перелет копии на другую сторону не виден */
-.main-hero--tilt .main-hero__slot.is-hidden {
-  opacity: 0;
-}
-
-/* Боковые баннеры ленты — непрозрачность 85%, решение дизайнера */
-.main-hero--tilt .main-hero__slot:not(.is-active, .is-hidden) {
-  opacity: 0.85;
-}
-
-/* ——— Соседние того же размера (/main-v5), раздел 12, 22878:57650 ———
-   Все карточки 260 × 354, как текущая: соседние не уменьшаются, стоят через
-   зазор 8 — шаг 260 + 8. При смене лента едет на шаг. */
-.main-hero--flat {
-  --banner-step: 268px;
-}
-
-.main-hero--flat .main-hero__slot .main-banner {
-  border-radius: 40px;
-  transform: none;
-}
-
-.main-hero--flat .main-hero__slot .main-banner__content {
-  width: 212px;
-  transform: none;
-}
-
-/* ——— Пагинация: под баннерами на 438, точки 8 через 8, текущая — полоса 48,
-   в конце — точка 6, намек на продолжение ленты, как в макете ——— */
+/* ——— Пагинация: под баннерами, точки 8 через 8, текущая — полоса 48 ——— */
 
 .main-hero__pagination {
   position: absolute;
-  top: 438px;
+  top: 442px;
   left: 50%;
   display: flex;
   align-items: center;
@@ -248,19 +249,15 @@
   width: 48px;
 }
 
-.main-hero__dot--more {
-  width: 6px;
-  height: 6px;
-  cursor: default;
-}
-
 /* Полоса бежит, пока баннер на экране: дошла до конца — следующий баннер */
 .main-hero__progress {
   position: absolute;
-  inset: 0 auto 0 0;
-  width: 0;
+  inset: 0;
   border-radius: inherit;
   background-color: var(--bg-primary);
+  /* Растет через transform, а не width: не пересчитывает раскладку каждый кадр */
+  transform: scaleX(0);
+  transform-origin: left;
   animation-name: main-hero-progress;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
@@ -268,22 +265,48 @@
 
 /* Остановленный баннер (рамка канваса) — полоса на середине, как в макете */
 .main-hero__progress.is-paused {
-  width: 50%;
+  transform: scaleX(0.5);
   animation: none;
 }
 
 @keyframes main-hero-progress {
   to {
-    width: 100%;
+    transform: scaleX(1);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .main-hero {
-    --banner-move-ms: 0ms;
-  }
-
   .main-hero__dot {
     transition: none;
   }
+}
+
+/* Слои GPU: все, что двигается во время смены, — отдельным слоем. Иначе
+   браузер перерисовывает целый баннер на каждом кадре, потому что внутри него
+   меняются transform и прозрачность. Включено по умолчанию, в панели «Плавность»
+   отключается — чтобы сравнить */
+.main-hero[data-gpu] .main-hero__slot,
+.main-hero[data-gpu] .main-banner,
+.main-hero[data-gpu] .main-banner::after,
+.main-hero[data-gpu] .main-banner__content,
+.main-hero[data-gpu] .main-banner__picture,
+.main-hero[data-gpu] .main-banner__image {
+  will-change: transform, opacity;
+}
+
+.main-hero[data-gpu] .main-banner__light,
+.main-hero[data-gpu] .main-banner__light-active,
+.main-hero[data-gpu] .main-banner__light-small {
+  will-change: opacity;
+}
+
+/* Ширина текста плавно — по просьбе из панели: строки пересчитываются каждый
+   кадр, на слабом телефоне это рывки */
+.main-hero[data-smooth-text] .main-banner__content {
+  width: calc(212px - 25px * var(--banner-away));
+}
+
+.main-hero[data-lite] .main-hero__dot {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }

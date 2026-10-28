@@ -1,14 +1,24 @@
-/* Баннер героя по разделу 12 макета, компонент «banners». Градиент заливки —
-   часть иллюстрации баннера, вне токенов.
+/* Баннер героя по разделу 9 макета. Цвета заливки и подсветки — часть
+   иллюстрации баннера, вне токенов.
 
-   Раскладка — по текущему: 260 × 354. Остальные 236 × 322 — та же карточка,
-   уменьшенная масштабом 236 / 260; их слои в координатах макета, деленных на
-   этот масштаб. Анимируются только transform — на телефоне так переход
-   плавный, без пересчета раскладки на каждом кадре. */
+   Раскладка — по текущему: 260 × 354, слои — по координатам макета. Остальные
+   236 × 322 — та же карточка, уменьшенная масштабом 236 / 260; их слои в
+   координатах макета, деленных на этот масштаб.
+
+   Состояний «текущий / соседний» с переключением нет: карусель (hero.tsx)
+   каждый кадр пишет в слот --t — 1 в центре, 0 у соседних, между ними на ходу.
+   Масштаб, подсветка, положение текста и картинка интерполируются от него
+   непрерывно — только transform и прозрачность, их рисует видеокарта.
+   Скругление, цвет синего и ширина текста меняются разом на середине пути
+   (--banner-near): их плавное изменение перерисовывает слой каждый кадр, и
+   лента едет рывками. Переходов CSS нет. */
 .main-banner {
-  --banner-ease: var(--banner-move-ms, 500ms) cubic-bezier(0.22, 0.61, 0.36, 1);
   /* 236 / 260 */
   --banner-small: 0.9077;
+  --banner-scale: calc(var(--banner-small) + (1 - var(--banner-small)) * var(--t, 0));
+  --banner-away: calc(1 - var(--t, 0));
+  /* 0 у соседних, 1 у текущего; переключается на середине пути */
+  --banner-near: round(var(--t, 0), 1);
 
   position: relative;
   display: block;
@@ -19,58 +29,42 @@
   isolation: isolate;
   -webkit-mask-image: -webkit-radial-gradient(white, black);
   mask-image: radial-gradient(white, black);
-  /* Скругление 40 у обоих размеров: у уменьшенного — 40 / 0,91 */
-  border-radius: 44.07px;
+  /* 44,07 у соседних, 40 у текущего */
+  border-radius: calc(44.07px - 4.07px * var(--banner-near));
   color: var(--text-on-color-strong);
-  transform: scale(var(--banner-small));
-  transition:
-    transform var(--banner-ease),
-    border-radius var(--banner-ease);
+  transform: scale(var(--banner-scale));
 }
 
-.main-banner--active {
-  border-radius: 40px;
-  transform: none;
+/* Рамка 0,5 у остальных — поверх слоев, как в макете; у текущего ее нет.
+   Легкая тень текущего из макета (4%) не видна — ее нет */
+.main-banner::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border: 0.55px solid rgb(255 255 255 / 40%);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--banner-away);
 }
 
-/* Круговой градиент из левого нижнего угла до правого верхнего, как в макете.
-   Легкая тень из макета (4%) не видна — ее нет */
 .main-banner--account {
-  background-image: radial-gradient(
-    circle farthest-corner at 0 100%,
-    #cac9fe 0%,
-    #aba6f4 20%,
-    #8d82eb 40%,
-    #7059d4 70%,
-    #5230bd 100%
-  );
+  /* 48,47 у соседних, 44 у текущего */
+  border-radius: calc(48.47px - 4.47px * var(--banner-near));
+  background-color: #613ad7;
 }
 
+/* Синий темнее у текущего */
 .main-banner--deposit {
-  background-image: radial-gradient(
-    circle farthest-corner at 0 100%,
-    #d2dffa 0%,
-    #abb2f6 15%,
-    #8484f2 30%,
-    #5c5ce2 65%,
-    #4848d9 82.5%,
-    #3434d1 100%
-  );
+  background-color: color-mix(in srgb, #1f4ed9 calc(var(--banner-near) * 100%), #245bff);
 }
 
 .main-banner--deposit-grey {
-  background-image: radial-gradient(
-    circle farthest-corner at 0 100%,
-    #d2dffa 0%,
-    #abc0ee 15%,
-    #84a1e3 30%,
-    #6b89cd 65%,
-    #5171b8 100%
-  );
+  background-color: #5066a5;
 }
 
-/* Текст 20 / 16 у обоих размеров: у остальных блок обратно увеличен,
-   сдвинут на поля 24 и уже — 188 вместо 212, как в макете */
+/* Текст 20 / 16 у обоих состояний: у остальных блок обратно увеличен,
+   сдвинут на поля 24,5 и уже — 187 вместо 212, как в макете */
 .main-banner__content {
   position: absolute;
   z-index: 1;
@@ -79,15 +73,16 @@
   display: flex;
   flex-direction: column;
   gap: 8.72px;
-  width: 188px;
-  transform: translate(2.44px, 2.44px) scale(calc(1 / var(--banner-small)));
+  /* 187 у соседних, 212 у текущего */
+  width: calc(187px + 25px * var(--banner-near));
+  /* Против масштаба карточки: текст везде 20 / 16 */
+  transform: translate(calc(2.99px * var(--banner-away)), calc(2.99px * var(--banner-away)))
+    scale(calc(1 / var(--banner-scale)));
   transform-origin: 0 0;
-  transition: transform var(--banner-ease);
 }
 
-.main-banner--active .main-banner__content {
-  width: 212px;
-  transform: none;
+.main-banner--account .main-banner__content {
+  gap: 9.59px;
 }
 
 .main-banner__title,
@@ -103,42 +98,113 @@
   opacity: 0.7;
 }
 
-/* Иллюстрация — рамка из макета (video-conteiner) 260 × 217 в точке −0,5; 137,
-   обрезана сверху. Картинка выгружена из макета с полями по бокам до краев
-   иллюстрации: 368 × 240 от −64. У остальных рамка того же размера на экране,
-   прижата к низу: в координатах карточки выше на 21,3 */
+.main-banner__art,
 .main-banner__picture {
   position: absolute;
-  top: 137px;
-  left: -64px;
-  width: 368px;
-  height: 240px;
-  clip-path: inset(0 -100vw -100vw);
+  inset: 0;
   pointer-events: none;
-  transform: translateY(-21.32px);
-  transition: transform var(--banner-ease);
 }
 
-.main-banner--active .main-banner__picture {
-  transform: none;
-}
-
-.main-banner__image {
+.main-banner__art img {
+  position: absolute;
   display: block;
-  width: 100%;
-  height: 100%;
   max-width: none;
-  transition: translate var(--banner-ease);
 }
 
-/* «16,3%» в макете смещен от рамки на 15,8 в пикселях экрана — у уменьшенного
-   это на 1,6 выше */
-.main-banner:is(.main-banner--deposit, .main-banner--deposit-grey):not(.main-banner--active) .main-banner__image {
-  translate: 0 -1.61px;
+/* Подсветка — размытый эллипс из макета, повернут как там. У текущего своя:
+   две подсветки сменяют друг друга прозрачностью */
+.main-banner__light,
+.main-banner__light-small {
+  opacity: var(--banner-away);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .main-banner {
-    --banner-ease: 0ms;
-  }
+.main-banner__light-active {
+  opacity: var(--t, 0);
+}
+
+/* У остальных: в макете −295,7; 55,25; 795,7 × 517,9 */
+.main-banner--account .main-banner__light {
+  left: -325.77px;
+  top: 60.87px;
+  width: 876.62px;
+  height: 570.57px;
+  transform: rotate(19.89deg);
+}
+
+/* Та же подсветка вполовину прозрачнее */
+.main-banner--account .main-banner__light-active {
+  left: -283.7px;
+  top: 55.25px;
+  width: 795.7px;
+  height: 517.9px;
+  transform: rotate(19.89deg);
+}
+
+/* У остальных: в макете −258; 60,2 (у серого — 70,2); 723,4 × 470,8 */
+.main-banner--deposit .main-banner__light,
+.main-banner--deposit-grey .main-banner__light {
+  left: -284.24px;
+  top: 66.32px;
+  width: 796.96px;
+  height: 518.68px;
+  transform: rotate(28.33deg);
+}
+
+.main-banner--deposit-grey .main-banner__light {
+  top: 77.34px;
+  transform: rotate(19.89deg);
+}
+
+.main-banner--deposit .main-banner__light-active {
+  left: -275.9px;
+  top: 30.2px;
+  width: 783.4px;
+  height: 530.8px;
+  transform: rotate(28.33deg);
+}
+
+.main-banner--deposit-grey .main-banner__light-active {
+  left: -246px;
+  top: 70.2px;
+  width: 723.4px;
+  height: 470.8px;
+  transform: rotate(19.89deg);
+}
+
+/* В макете −120; 172,4; 385,7 × 284,5 */
+.main-banner__light-small {
+  left: -132.2px;
+  top: 189.93px;
+  width: 424.93px;
+  height: 313.43px;
+  transform: rotate(28.33deg);
+}
+
+/* Картинка в рамке текущего; у остальных — сдвиг и масштаб до рамки из
+   макета. Фиолетовый: у остальных −43; 157; 302 × 207 */
+.main-banner__image {
+  transform-origin: 0 0;
+}
+
+.main-banner--account .main-banner__image {
+  left: -43px;
+  top: 157.1px;
+  width: 330px;
+  height: 227px;
+  object-fit: cover;
+  transform: translate(calc(-4.37px * var(--banner-away)), calc(15.86px * var(--banner-away)))
+    scale(calc(1 + 0.0082 * var(--banner-away)), calc(1 + 0.0046 * var(--banner-away)));
+}
+
+/* «16,3%» растянут по рамке — как в макете; у серого поверх второй слой.
+   У остальных −58; 121; 337 × 244. Серый текущим в макете не нарисован —
+   как синий */
+.main-banner--deposit .main-banner__image,
+.main-banner--deposit-grey .main-banner__image {
+  left: -64px;
+  top: 122px;
+  width: 363px;
+  height: 262px;
+  transform: translate(calc(0.1px * var(--banner-away)), calc(11.31px * var(--banner-away)))
+    scale(calc(1 + 0.0228 * var(--banner-away)), calc(1 + 0.026 * var(--banner-away)));
 }
