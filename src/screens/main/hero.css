@@ -219,20 +219,35 @@
   transform: translateX(calc(var(--offset, 0) * var(--parallax-shift, 40px)));
 }
 
-/* ——— Пагинация: под баннерами, точки 8 через 8, текущая — полоса 48 ——— */
+/* ——— Пагинация: под баннерами, точки 8 через 8, текущая — полоса 48 ———
+   Видно окно из пяти точек (решение дизайнера, макет пагинации со скриншота):
+   текущая по центру окна, у начала и конца ленты окно упирается в край.
+   Крайняя точка окна — 6, если за ней есть еще баннеры. Окно сдвигается
+   плавно: лента точек едет на шаг 16 за раз */
 
 .main-hero__pagination {
   position: absolute;
   top: 442px;
   left: 50%;
+  /* Точки 8 через 8, у текущей +40 */
+  width: calc(var(--dots) * 16px + 32px);
+  overflow: hidden;
+  border-radius: var(--radius-absolute);
+  transform: translateX(-50%);
+}
+
+.main-hero__dots {
   display: flex;
   align-items: center;
   gap: 8px;
-  transform: translateX(-50%);
+  /* Перед окном только точки 8: текущая всегда внутри */
+  transform: translateX(calc(var(--dots-start) * -16px));
+  transition: transform 400ms ease;
 }
 
 .main-hero__dot {
   position: relative;
+  flex: none;
   width: 8px;
   height: 8px;
   padding: 0;
@@ -243,11 +258,25 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
-  transition: width 400ms ease;
+  transition:
+    width 400ms ease,
+    transform 400ms ease,
+    opacity 400ms ease;
 }
 
 .main-hero__dot.is-active {
   width: 48px;
+}
+
+/* Крайняя точка окна — 6 вместо 8 */
+.main-hero__dot.is-edge {
+  transform: scale(0.75);
+}
+
+.main-hero__dot.is-outside {
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
 }
 
 /* Полоса бежит, пока баннер на экране: дошла до конца — следующий баннер */
@@ -277,6 +306,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .main-hero__dots,
   .main-hero__dot {
     transition: none;
   }

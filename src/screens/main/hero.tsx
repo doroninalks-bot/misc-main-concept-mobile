@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react"
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react"
 import { useSearchParams } from "react-router"
 
 import { Button, SiteHeaderLogo, cx, maskIcon } from "@banki/design-system"
@@ -21,6 +21,9 @@ const HEADER_ICONS = "/assets/icons/header"
 const GLOW = "/assets/images/misc-main-concept-mobile/hero"
 
 const count = banners.length
+/** Сколько точек пагинации видно разом — остальные за краем окна */
+const PAGINATION_DOTS = 5
+
 /**
  * Каждый баннер в ленте дважды: при смене крайний уходит за экран с одной
  * стороны, а его копия приезжает с другой — лента бесконечная.
@@ -283,7 +286,10 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
     // Скорость в карточках в секунду по последним ~100 мс; палец стоял дольше — броска нет
     const first = d.samples[0]
     const now = performance.now()
-    const v = now - first.t > 0 && now - d.samples[d.samples.length - 1].t < 80 ? ((pos.current - first.pos) / (now - first.t)) * 1000 : 0
+    const v =
+      now - first.t > 0 && now - d.samples[d.samples.length - 1].t < 80
+        ? ((pos.current - first.pos) / (now - first.t)) * 1000
+        : 0
     const base = Math.round(d.pos)
     const delta = pos.current - d.pos
 
@@ -300,6 +306,11 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
     if (to === base) to = base + Math.sign(delta)
     glide(to)
   }
+
+  // Пагинация — окно из пяти точек (решение дизайнера): текущая по центру
+  // окна, у краев ленты окно упирается в край
+  const dots = Math.min(count, PAGINATION_DOTS)
+  const dotsStart = Math.max(0, Math.min(active - Math.floor(dots / 2), count - dots))
 
   return (
     <section
@@ -363,27 +374,38 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
         })}
       </div>
 
-      <div className="main-hero__pagination">
-        {banners.map((banner, index) => (
-          <button
-            key={banner.id}
-            type="button"
-            className={cx("main-hero__dot", index === active && "is-active")}
-            aria-label={`Баннер ${index + 1} из ${count}`}
-            aria-current={index === active}
-            onClick={() => goTo(index)}
-          >
-            {index === active && (
-              // key с позицией: полоса бежит заново после любой смены, конец полосы — смена
-              <span
-                key={position}
-                className={cx("main-hero__progress", !autoplay && "is-paused")}
-                style={{ animationDuration: `${HERO_INTERVAL_MS}ms` }}
-                onAnimationEnd={autoplay ? () => go(1) : undefined}
-              />
-            )}
-          </button>
-        ))}
+      <div className="main-hero__pagination" style={{ "--dots": dots } as CSSProperties}>
+        <div className="main-hero__dots" style={{ "--dots-start": dotsStart } as CSSProperties}>
+          {banners.map((banner, index) => (
+            <button
+              key={banner.id}
+              type="button"
+              className={cx(
+                "main-hero__dot",
+                index === active && "is-active",
+                // Крайняя точка окна меньше, если за ней есть еще баннеры
+                index !== active &&
+                  ((index === dotsStart && dotsStart > 0) ||
+                    (index === dotsStart + dots - 1 && dotsStart + dots < count)) &&
+                  "is-edge",
+                (index < dotsStart || index >= dotsStart + dots) && "is-outside",
+              )}
+              aria-label={`Баннер ${index + 1} из ${count}`}
+              aria-current={index === active}
+              onClick={() => goTo(index)}
+            >
+              {index === active && (
+                // key с позицией: полоса бежит заново после любой смены, конец полосы — смена
+                <span
+                  key={position}
+                  className={cx("main-hero__progress", !autoplay && "is-paused")}
+                  style={{ animationDuration: `${HERO_INTERVAL_MS}ms` }}
+                  onAnimationEnd={autoplay ? () => go(1) : undefined}
+                />
+              )}
+            </button>
+          ))}
+        </div>
       </div>
 
       <CarouselTuning values={tuning} defaults={preset.defaults} onChange={setTuning} />
