@@ -45,7 +45,7 @@ export const TUNING_DEFAULTS: CarouselTuningValues = {
   duration: 500,
   easing: "in-out",
   settle: 0.16,
-  parallax: 12,
+  parallax: 40,
   smoothText: false,
   momentumTau: 100,
   momentumPower: 1,

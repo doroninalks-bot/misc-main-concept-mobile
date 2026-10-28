@@ -50,18 +50,19 @@
 }
 
 /* Круговой градиент из левого нижнего угла до правого верхнего, у обоих
-   размеров один, как в макете */
+   размеров один, как в макете. Цвета переставлены дизайнером: вход — синий,
+   вклад и займ — фиолетовые */
 .main-banner--account {
   /* 48,47 у соседних, 44 у текущего */
   border-radius: calc(48.47px - 4.47px * var(--banner-near));
-  background-image: radial-gradient(circle farthest-corner at 0 100%, #cac9fe 0%, #8d82eb 40%, #5230bd 100%);
-}
-
-.main-banner--deposit {
   background-image: radial-gradient(circle farthest-corner at 0 100%, #d2dffa 0%, #8484f2 30%, #3434d1 100%);
 }
 
-/* Бывший серый — теперь фиолетовый, как «Войдите в аккаунт» (решение дизайнера) */
+.main-banner--deposit {
+  background-image: radial-gradient(circle farthest-corner at 0 100%, #cac9fe 0%, #8d82eb 40%, #5230bd 100%);
+}
+
+/* Займ (бывший серый вклад) — фиолетовый, как вклад (решение дизайнера) */
 .main-banner--deposit-grey {
   background-image: radial-gradient(circle farthest-corner at 0 100%, #cac9fe 0%, #8d82eb 40%, #5230bd 100%);
 }
