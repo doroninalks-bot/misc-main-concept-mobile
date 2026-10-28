@@ -69,64 +69,33 @@
   will-change: transform;
 }
 
-/* Рамка фона в макете — 375 × 494 в точке (385,7; 48,2) этого SVG */
+/* Рамка фона в макете — 375 × 494 в точке (385,7; 48,2) свечения.
+   Свечение — готовая картинка (hero.tsx, HeroGlow): живое размытие SVG
+   телефон пересчитывал каждый кадр смены цвета. Два цвета лежат стопкой, между
+   ними перетекает только прозрачность картинки — это видеокарта делает даром */
 .main-hero__glow {
   position: absolute;
   left: -385.683px;
   top: -48.239px;
   display: block;
+  width: 1254.25px;
   max-width: none;
+  height: 954.403px;
   pointer-events: none;
+  will-change: opacity;
+  transition: opacity var(--tone-ms) var(--tone-curve);
 }
 
-/* Свечение двух цветов лежит стопкой, и между ними перетекает только
-   прозрачность: размытие 95 на 1254 × 954 растрится один раз на слой, а не на
-   каждом кадре перелива цвета — иначе при смене баннера лента едет рывками.
-   Цвета фиксированные для слоя */
-.main-hero__glow--purple {
-  --hero-glow-base: #3d2299;
-  --hero-glow-accent: #d27bff;
-  --hero-glow-accent-opacity: 0.2;
-  --hero-glow-bright: #5b33c9;
-  opacity: 1;
+.main-hero__glow--blue {
+  opacity: 0;
 }
 
 .main-hero[data-tone="blue"] .main-hero__glow--purple {
   opacity: 0;
 }
 
-.main-hero__glow--blue {
-  --hero-glow-base: #183e9d;
-  --hero-glow-accent: #a677ff;
-  --hero-glow-accent-opacity: 0.4;
-  --hero-glow-bright: #1c3cc2;
-  opacity: 0;
-}
-
 .main-hero[data-tone="blue"] .main-hero__glow--blue {
   opacity: 1;
-}
-
-.main-hero__glow {
-  will-change: opacity;
-  transition: opacity var(--tone-ms) var(--tone-curve);
-}
-
-.main-hero__glow-base {
-  fill: var(--hero-glow-base);
-}
-
-.main-hero__glow-accent {
-  opacity: var(--hero-glow-accent-opacity);
-  fill: var(--hero-glow-accent);
-}
-
-.main-hero__glow-accent path {
-  fill: inherit;
-}
-
-.main-hero__glow-bright {
-  fill: var(--hero-glow-bright);
 }
 
 /* ——— Шапка на цвете ——— */

@@ -17,6 +17,7 @@ import { HeroBanner } from "./banner"
 import "./hero.css"
 
 const HEADER_ICONS = "/assets/icons/header"
+const GLOW = "/assets/images/misc-main-concept-mobile/hero"
 
 const count = banners.length
 /**
@@ -342,38 +343,14 @@ export function Hero() {
 }
 
 /**
- * Свечение фона — три размытых пятна из макета (MobileBackground, 22797:43972).
- * SVG встроен, чтобы цвета пятен брались из hero.css по текущему баннеру и
- * плавно перетекали при смене.
+ * Свечение фона — три размытых пятна из макета (MobileBackground, 22797:43972),
+ * заранее отрисованные в картинку: живое размытие SVG телефон пересчитывал
+ * каждый кадр смены цвета, и смена баннеров тормозила. Исходники —
+ * `_sources/figma/hero-glow-*.svg`, картинка в половину размера — после
+ * размытия разницы не видно.
  */
 function HeroGlow({ tone }: { tone: "purple" | "blue" }) {
-  return (
-    <svg className={`main-hero__glow main-hero__glow--${tone}`} width="1254" height="954" viewBox="0 0 1254.25 954.403" fill="none">
-      <g filter={`url(#main-hero-blur-60-${tone})`}>
-        <path
-          className="main-hero__glow-base"
-          d="M895.663 277.137C934.426 421.803 808.059 581.357 613.415 633.512C418.77 685.666 229.556 610.672 190.793 466.007C152.03 321.341 287.54 193.392 482.184 141.237C676.829 89.0824 856.9 132.472 895.663 277.137Z"
-        />
-      </g>
-      <g className="main-hero__glow-accent" filter={`url(#main-hero-blur-95-${tone})`}>
-        <path d="M465.061 305.146C355.438 217.036 236.011 281.319 190 324.474L302.169 764.403C509.937 729.116 943.708 653.893 1016.64 635.297C1089.57 616.702 968.471 396.191 898.803 288.26C799.899 330.601 574.684 393.255 465.061 305.146Z" />
-      </g>
-      <g filter={`url(#main-hero-blur-95-${tone})`}>
-        <path
-          className="main-hero__glow-bright"
-          d="M684.183 332.738C798.183 343.938 829.683 328.071 831.183 318.738C978.183 220.238 1285.68 656.738 805.183 523.738C324.683 390.738 541.683 318.738 684.183 332.738Z"
-        />
-      </g>
-      <defs>
-        <filter id={`main-hero-blur-60-${tone}`} x="0" y="0" width="1254.25" height="954.403" filterUnits="userSpaceOnUse">
-          <feGaussianBlur stdDeviation="60" />
-        </filter>
-        <filter id={`main-hero-blur-95-${tone}`} x="0" y="0" width="1254.25" height="954.403" filterUnits="userSpaceOnUse">
-          <feGaussianBlur stdDeviation="95" />
-        </filter>
-      </defs>
-    </svg>
-  )
+  return <img className={`main-hero__glow main-hero__glow--${tone}`} src={`${GLOW}/glow-${tone}.png`} alt="" />
 }
 
 function HeaderIcon({ icon, label }: { icon: string; label: string }) {
