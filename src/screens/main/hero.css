@@ -320,6 +320,7 @@
 .main-hero[data-gpu] .main-banner,
 .main-hero[data-gpu] .main-banner__crop,
 .main-hero[data-gpu] .main-banner__content,
+.main-hero[data-gpu] .main-banner__art,
 .main-hero[data-gpu] .main-banner__picture,
 .main-hero[data-gpu] .main-banner__image {
   will-change: transform, opacity;
