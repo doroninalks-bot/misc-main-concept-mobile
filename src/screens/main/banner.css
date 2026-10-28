@@ -1,5 +1,6 @@
-/* Баннер героя по разделу 9 макета. Цвета заливки и подсветки — часть
-   иллюстрации баннера, вне токенов.
+/* Баннер героя по разделу 9 макета, градиенты заливки — по компоненту
+   «banners» (22915:22967). Цвета градиента — часть иллюстрации баннера, вне
+   токенов.
 
    Раскладка — по текущему: 260 × 354, слои — по координатам макета. Остальные
    236 × 322 — та же карточка, уменьшенная масштабом 236 / 260; их слои в
@@ -7,9 +8,9 @@
 
    Состояний «текущий / соседний» с переключением нет: карусель (hero.tsx)
    каждый кадр пишет в слот --t — 1 в центре, 0 у соседних, между ними на ходу.
-   Масштаб, подсветка, положение текста и картинка интерполируются от него
+   Масштаб, рамка, положение текста и картинка интерполируются от него
    непрерывно — только transform и прозрачность, их рисует видеокарта.
-   Скругление, цвет синего и ширина текста меняются разом на середине пути
+   Скругление и ширина текста меняются разом на середине пути
    (--banner-near): их плавное изменение перерисовывает слой каждый кадр, и
    лента едет рывками. Переходов CSS нет. */
 .main-banner {
@@ -48,19 +49,20 @@
   opacity: var(--banner-away);
 }
 
+/* Круговой градиент из левого нижнего угла до правого верхнего, у обоих
+   размеров один, как в макете */
 .main-banner--account {
   /* 48,47 у соседних, 44 у текущего */
   border-radius: calc(48.47px - 4.47px * var(--banner-near));
-  background-color: #613ad7;
+  background-image: radial-gradient(circle farthest-corner at 0 100%, #cac9fe 0%, #8d82eb 40%, #5230bd 100%);
 }
 
-/* Синий темнее у текущего */
 .main-banner--deposit {
-  background-color: color-mix(in srgb, #1f4ed9 calc(var(--banner-near) * 100%), #245bff);
+  background-image: radial-gradient(circle farthest-corner at 0 100%, #d2dffa 0%, #8484f2 30%, #3434d1 100%);
 }
 
 .main-banner--deposit-grey {
-  background-color: #5066a5;
+  background-image: radial-gradient(circle farthest-corner at 0 100%, #d2dffa 0%, #84a1e3 30%, #5171b8 100%);
 }
 
 /* Текст 20 / 16 у обоих состояний: у остальных блок обратно увеличен,
@@ -109,75 +111,6 @@
   position: absolute;
   display: block;
   max-width: none;
-}
-
-/* Подсветка — размытый эллипс из макета, повернут как там. У текущего своя:
-   две подсветки сменяют друг друга прозрачностью */
-.main-banner__light,
-.main-banner__light-small {
-  opacity: var(--banner-away);
-}
-
-.main-banner__light-active {
-  opacity: var(--t, 0);
-}
-
-/* У остальных: в макете −295,7; 55,25; 795,7 × 517,9 */
-.main-banner--account .main-banner__light {
-  left: -325.77px;
-  top: 60.87px;
-  width: 876.62px;
-  height: 570.57px;
-  transform: rotate(19.89deg);
-}
-
-/* Та же подсветка вполовину прозрачнее */
-.main-banner--account .main-banner__light-active {
-  left: -283.7px;
-  top: 55.25px;
-  width: 795.7px;
-  height: 517.9px;
-  transform: rotate(19.89deg);
-}
-
-/* У остальных: в макете −258; 60,2 (у серого — 70,2); 723,4 × 470,8 */
-.main-banner--deposit .main-banner__light,
-.main-banner--deposit-grey .main-banner__light {
-  left: -284.24px;
-  top: 66.32px;
-  width: 796.96px;
-  height: 518.68px;
-  transform: rotate(28.33deg);
-}
-
-.main-banner--deposit-grey .main-banner__light {
-  top: 77.34px;
-  transform: rotate(19.89deg);
-}
-
-.main-banner--deposit .main-banner__light-active {
-  left: -275.9px;
-  top: 30.2px;
-  width: 783.4px;
-  height: 530.8px;
-  transform: rotate(28.33deg);
-}
-
-.main-banner--deposit-grey .main-banner__light-active {
-  left: -246px;
-  top: 70.2px;
-  width: 723.4px;
-  height: 470.8px;
-  transform: rotate(19.89deg);
-}
-
-/* В макете −120; 172,4; 385,7 × 284,5 */
-.main-banner__light-small {
-  left: -132.2px;
-  top: 189.93px;
-  width: 424.93px;
-  height: 313.43px;
-  transform: rotate(28.33deg);
 }
 
 /* Картинка в рамке текущего; у остальных — сдвиг и масштаб до рамки из

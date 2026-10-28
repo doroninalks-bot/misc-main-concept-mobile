@@ -96,7 +96,7 @@ export function Hero() {
       slot.style.setProperty("--t", String(clamp01(1 - distance)))
       // Ушедший на два шага слот прозрачен к моменту, когда копия перелетает на другую сторону
       // Не ровно 0: полностью прозрачный слой браузер не рисует, и тяжелая
-      // отрисовка баннера (подсветка, маска, картинки) ложится на первый кадр смены — рывок
+      // отрисовка баннера (градиент, маска, картинки) ложится на первый кадр смены — рывок
       slot.style.setProperty("--fade", String(Math.max(HIDDEN_FADE, clamp01(2 - distance))))
       slot.style.zIndex = String(100 - Math.round(distance * 10))
     })

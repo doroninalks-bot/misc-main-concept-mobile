@@ -7,11 +7,12 @@ import "./banner.css"
 const IMAGES = "/assets/images/misc-main-concept-mobile/banners"
 
 /**
- * Баннер героя: цветная карточка с подсветкой и иллюстрацией. Макет — раздел 9
- * (22797:43983 и 22797:44638): текущий 260 × 354, остальные 236 × 322.
+ * Баннер героя: карточка с градиентом и иллюстрацией. Макет — раздел 9
+ * (22797:43983 и 22797:44638), градиенты — компонент «banners» (22915:22967):
+ * текущий 260 × 354, остальные 236 × 322.
  * Раскладка — по текущему, остальные уменьшены масштабом: на телефоне так
- * переход плавный. Текст у всех того же размера, у текущего другая подсветка
- * и крупнее картинка — слои в banner.css, их степень задает --t слота.
+ * переход плавный. Текст у всех того же размера, у текущего крупнее картинка —
+ * слои в banner.css, их степень задает --t слота.
  */
 export function HeroBanner({ banner }: { banner: Banner }) {
   const { id } = banner
@@ -19,14 +20,6 @@ export function HeroBanner({ banner }: { banner: Banner }) {
   return (
     <article className={cx("main-banner", `main-banner--${id}`)}>
       <span className="main-banner__art" aria-hidden="true">
-        <img className="main-banner__light" src={`${IMAGES}/${LIGHTS[id]}.svg`} alt="" />
-        {/* Серый текущим в макете не нарисован — та же подсветка */}
-        <img
-          className="main-banner__light-active"
-          src={`${IMAGES}/${LIGHTS[id]}${id === "deposit-grey" ? "" : "-active"}.svg`}
-          alt=""
-        />
-        {id === "deposit" && <img className="main-banner__light-small" src={`${IMAGES}/blue-light-small.svg`} alt="" />}
         {/* Картинки в отдельном слое — его двигает параллакс карусели */}
         <span className="main-banner__picture">
           <img
@@ -43,10 +36,4 @@ export function HeroBanner({ banner }: { banner: Banner }) {
       </div>
     </article>
   )
-}
-
-const LIGHTS = {
-  account: "purple-light",
-  deposit: "blue-light",
-  "deposit-grey": "grey-light",
 }
