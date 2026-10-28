@@ -262,7 +262,8 @@ export function Hero() {
       data-smooth-text={tuning.smoothText || undefined}
       data-gpu={tuning.gpuLayers || undefined}
       data-lite={tuning.lite || undefined}
-      data-edge-fade={tuning.edgeFade || undefined}
+      // Карточки по бокам уходят в градиент, пока не выбрано «Без размытий»
+      data-edge-fade={!tuning.lite || undefined}
       style={tuningStyle(tuning)}
       aria-label="Баннеры"
     >
