@@ -29,7 +29,8 @@ Local — адрес для компьютера, Network — для телеф�
 
 | Маршрут | Экран | Документация |
 |---|---|---|
-| `/` | главная: баннеры каруселью, быстрые ссылки, продукты | [docs/screens/main.md](docs/screens/main.md) |
+| `/` | главная, вариант 1: баннеры каруселью, фон меняет цвет вслед за баннером | [docs/screens/main.md](docs/screens/main.md) |
+| `/main-v2` | главная, вариант 2: фон всегда синий | [docs/screens/main.md](docs/screens/main.md) |
 | `/canvas` | доска со всеми экранами, не для респондентов | [docs/screens/canvas.md](docs/screens/canvas.md) |
 | `/kit` | ведет на сайт дизайн-системы | — |
 | любой другой | «Такого экрана нет», служебный | [docs/screens/not-found.md](docs/screens/not-found.md) |

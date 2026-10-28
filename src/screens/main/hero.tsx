@@ -6,6 +6,7 @@ import { Button, SiteHeaderLogo, cx, maskIcon } from "@banki/design-system"
 import {
   CarouselTuning,
   EASINGS,
+  TUNING_DEFAULTS,
   tuningStyle,
   useCarouselTuning,
 } from "@/components/carousel-tuning/carousel-tuning"
@@ -43,6 +44,16 @@ const SWIPE_MIN = 0.15
 /** Прозрачность ушедших слотов: невидимо глазу, но слой остается нарисованным */
 const HIDDEN_FADE = 0.001
 
+/**
+ * Варианты главной отличаются только тем, меняет ли фон цвет по умолчанию:
+ * `/` — меняет, `/main-v2` — нет (решение дизайнера). Сохраненные настройки
+ * панели у каждого свои
+ */
+const TUNING_PRESETS = {
+  on: { storageKey: "carousel-tuning-v1", defaults: { ...TUNING_DEFAULTS, toneChange: true } },
+  off: { storageKey: "carousel-tuning-v2", defaults: { ...TUNING_DEFAULTS, toneChange: false } },
+}
+
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
 
 /**
@@ -58,20 +69,24 @@ const clamp01 = (value: number) => Math.min(1, Math.max(0, value))
  * и смена по таймеру — плавный доезд до целой позиции (`settle`). React хранит
  * только целую цель `position` — для точек, фона и полосы.
  *
+ * `toneChange` — фон по умолчанию меняет цвет вслед за баннером (вариант 1,
+ * `/`); без него — всегда синий (вариант 2, `/main-v2`).
+ *
  * `?slide=<id баннера>` — нужный баннер по центру без смены, для рамок канваса.
  *
  * Свайп — как колесо выбора времени в iOS (решение дизайнера, был вариантом 5):
  * отпущенная лента едет по инерции и затухает (`glide`), сильный бросок
  * пролистывает сразу несколько баннеров, в конце лента встает на ближайший.
  */
-export function Hero() {
+export function Hero({ toneChange }: { toneChange: boolean }) {
   const [params] = useSearchParams()
   const pinned = banners.findIndex((banner) => banner.id === params.get("slide"))
   const autoplay = pinned < 0
 
   // Целая цель в ленте слотов, не номер баннера: растет и убывает без скачков
   const [position, setPosition] = useState(pinned < 0 ? BANNER_START : pinned)
-  const [tuning, setTuning] = useCarouselTuning()
+  const preset = TUNING_PRESETS[toneChange ? "on" : "off"]
+  const [tuning, setTuning] = useCarouselTuning(preset)
   const tuningRef = useRef(tuning)
   tuningRef.current = tuning
 
@@ -337,7 +352,7 @@ export function Hero() {
         ))}
       </div>
 
-      <CarouselTuning values={tuning} onChange={setTuning} />
+      <CarouselTuning values={tuning} defaults={preset.defaults} onChange={setTuning} />
     </section>
   )
 }

@@ -55,21 +55,25 @@ export const TUNING_DEFAULTS: CarouselTuningValues = {
   lite: false,
 }
 
-const STORAGE_KEY = "carousel-tuning"
+/**
+ * У каждого варианта главной свои сохраненные настройки и свои значения по
+ * умолчанию: настройки одного варианта не перебивают умолчания другого
+ */
+export type TuningPreset = { storageKey: string; defaults: CarouselTuningValues }
 
 /** Настройки переживают перезагрузку страницы — на телефоне это удобнее, чем вбивать заново */
-export function loadTuning(): CarouselTuningValues {
+export function loadTuning({ storageKey, defaults }: TuningPreset): CarouselTuningValues {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null")
-    return { ...TUNING_DEFAULTS, ...saved }
+    const saved = JSON.parse(localStorage.getItem(storageKey) ?? "null")
+    return { ...defaults, ...saved }
   } catch {
-    return TUNING_DEFAULTS
+    return defaults
   }
 }
 
-function saveTuning(values: CarouselTuningValues) {
+function saveTuning(storageKey: string, values: CarouselTuningValues) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(values))
+    localStorage.setItem(storageKey, JSON.stringify(values))
   } catch {
     // Приватный режим или запрещенное хранилище — настройки просто не сохранятся
   }
@@ -89,12 +93,12 @@ export function tuningStyle(values: CarouselTuningValues): CSSProperties {
 /**
  * Настройки панели: читаются из localStorage, пишутся при каждом изменении.
  */
-export function useCarouselTuning() {
-  const [values, setValues] = useState(loadTuning)
+export function useCarouselTuning(preset: TuningPreset) {
+  const [values, setValues] = useState(() => loadTuning(preset))
   const update = (patch: Partial<CarouselTuningValues>) =>
     setValues((current) => {
       const next = { ...current, ...patch }
-      saveTuning(next)
+      saveTuning(preset.storageKey, next)
       return next
     })
   return [values, update] as const
@@ -103,9 +107,12 @@ export function useCarouselTuning() {
 /** Панель справа снизу: свернута в кнопку, развернута — со всеми настройками */
 export function CarouselTuning({
   values,
+  defaults,
   onChange,
 }: {
   values: CarouselTuningValues
+  /** Умолчания варианта — к ним возвращает «Сбросить» */
+  defaults: CarouselTuningValues
   onChange: (patch: Partial<CarouselTuningValues>) => void
 }) {
   const [open, setOpen] = useState(false)
@@ -121,7 +128,7 @@ export function CarouselTuning({
         <div className="carousel-tuning__panel" role="group" aria-label="Плавность карусели">
           <div className="carousel-tuning__head">
             <span className="text-medium">Плавность карусели</span>
-            <button type="button" className="carousel-tuning__link" onClick={() => onChange(TUNING_DEFAULTS)}>
+            <button type="button" className="carousel-tuning__link" onClick={() => onChange(defaults)}>
               Сбросить
             </button>
             <button type="button" className="carousel-tuning__link" onClick={() => setOpen(false)}>

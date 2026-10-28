@@ -21,13 +21,32 @@ export const scenarios: CanvasItem[] = [
       "Баннеры каруселью по центру: сами меняются каждые 6 секунд, едут и увеличиваются; листаются нажатием на соседний и свайпом по инерции, как колесо выбора времени в iOS: сильный бросок пролистывает сразу несколько баннеров.",
     steps: [
       {
-        title: "Главная",
+        title: "Вариант 1: фон меняет цвет",
         note: "Интерактив",
         states: [
           { title: "Баннеры меняются", frames: [{ route: "/", label: "Mobile", ...PHONE }] },
           { title: "Баннер «Войдите в аккаунт»", frames: [{ route: "/?slide=account", label: "Mobile", ...PHONE }] },
-          { title: "Баннер «Вклад», синий", frames: [{ route: "/?slide=deposit", label: "Mobile", ...PHONE }] },
-          { title: "Баннер «Вклад», серый", frames: [{ route: "/?slide=deposit-grey", label: "Mobile", ...PHONE }] },
+          { title: "Баннер «Вклад»", frames: [{ route: "/?slide=deposit", label: "Mobile", ...PHONE }] },
+          {
+            title: "Баннер «Оформите первый займ»",
+            frames: [{ route: "/?slide=deposit-grey", label: "Mobile", ...PHONE }],
+          },
+        ],
+      },
+      {
+        title: "Вариант 2: фон всегда синий",
+        note: "Интерактив",
+        states: [
+          { title: "Баннеры меняются", frames: [{ route: "/main-v2", label: "Mobile", ...PHONE }] },
+          {
+            title: "Баннер «Войдите в аккаунт»",
+            frames: [{ route: "/main-v2?slide=account", label: "Mobile", ...PHONE }],
+          },
+          { title: "Баннер «Вклад»", frames: [{ route: "/main-v2?slide=deposit", label: "Mobile", ...PHONE }] },
+          {
+            title: "Баннер «Оформите первый займ»",
+            frames: [{ route: "/main-v2?slide=deposit-grey", label: "Mobile", ...PHONE }],
+          },
         ],
       },
     ],

@@ -12,6 +12,7 @@
 import type { ReactNode } from "react"
 
 import { MainScreen } from "@/screens/main/main"
+import { MainV2Screen } from "@/screens/main-v2/main-v2"
 
 export interface ScreenRoute {
   path: string
@@ -21,5 +22,6 @@ export interface ScreenRoute {
 }
 
 export const routes: ScreenRoute[] = [
-  { path: "/", title: "Главная", element: <MainScreen /> },
+  { path: "/", title: "Главная, вариант 1", element: <MainScreen /> },
+  { path: "/main-v2", title: "Главная, вариант 2", element: <MainV2Screen /> },
 ]

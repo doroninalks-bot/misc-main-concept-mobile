@@ -10,11 +10,14 @@ import "./main.css"
 /**
  * Главная Банки.ру, мобильный концепт: баннеры каруселью по центру, поиск,
  * быстрые ссылки и плитки «Наши продукты».
+ *
+ * `toneChange` — фон героя по умолчанию меняет цвет вслед за баннером:
+ * вариант 1 на `/`. Вариант 2 (`/main-v2`, экран `src/screens/main-v2/`) — без него.
  */
-export function MainScreen() {
+export function MainScreen({ toneChange = true }: { toneChange?: boolean }) {
   return (
     <div className="main">
-      <Hero />
+      <Hero toneChange={toneChange} />
 
       <main className="main__sheet">
         <div className="main__top">
