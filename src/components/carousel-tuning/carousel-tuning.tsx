@@ -35,6 +35,8 @@ export type CarouselTuningValues = {
   momentumMax: number
   /** Фон героя меняет цвет вслед за баннером: фиолетовый у «Войдите в аккаунт», синий у «Вкладов» */
   toneChange: boolean
+  /** Карточки по бокам уходят в градиент к краям экрана */
+  edgeFade: boolean
   gpuLayers: boolean
   lite: boolean
 }
@@ -50,6 +52,7 @@ export const TUNING_DEFAULTS: CarouselTuningValues = {
   momentumPower: 1,
   momentumMax: 12,
   toneChange: false,
+  edgeFade: true,
   gpuLayers: true,
   lite: false,
 }
@@ -130,7 +133,10 @@ export function CarouselTuning({
 
           <label className="carousel-tuning__row">
             <span>Доезд при автосмене и по точкам</span>
-            <select value={values.mode} onChange={(event) => onChange({ mode: event.target.value as "time" | "decay" })}>
+            <select
+              value={values.mode}
+              onChange={(event) => onChange({ mode: event.target.value as "time" | "decay" })}
+            >
               <option value="time">По времени и кривой</option>
               <option value="decay">Затухание</option>
             </select>
@@ -210,6 +216,11 @@ export function CarouselTuning({
             onChange={(toneChange) => onChange({ toneChange })}
           />
           <Check
+            label="Карточки уходят в градиент по бокам"
+            checked={values.edgeFade}
+            onChange={(edgeFade) => onChange({ edgeFade })}
+          />
+          <Check
             label="Плавная ширина текста"
             checked={values.smoothText}
             onChange={(smoothText) => onChange({ smoothText })}
@@ -219,11 +230,7 @@ export function CarouselTuning({
             checked={values.gpuLayers}
             onChange={(gpuLayers) => onChange({ gpuLayers })}
           />
-          <Check
-            label="Без размытий (точки пагинации)"
-            checked={values.lite}
-            onChange={(lite) => onChange({ lite })}
-          />
+          <Check label="Без размытий (точки пагинации)" checked={values.lite} onChange={(lite) => onChange({ lite })} />
         </div>
       ) : (
         <button type="button" className="carousel-tuning__fab" onClick={() => setOpen(true)}>
@@ -260,7 +267,15 @@ function Range({
   )
 }
 
-function Check({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
+function Check({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string
+  checked: boolean
+  onChange: (checked: boolean) => void
+}) {
   return (
     <label className="carousel-tuning__row carousel-tuning__row--check">
       <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />

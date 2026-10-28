@@ -262,6 +262,7 @@ export function Hero() {
       data-smooth-text={tuning.smoothText || undefined}
       data-gpu={tuning.gpuLayers || undefined}
       data-lite={tuning.lite || undefined}
+      data-edge-fade={tuning.edgeFade || undefined}
       style={tuningStyle(tuning)}
       aria-label="Баннеры"
     >
