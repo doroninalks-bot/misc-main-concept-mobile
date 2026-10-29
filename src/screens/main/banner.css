@@ -3,9 +3,9 @@
    токенов.
 
    Раскладка — по текущему: 260 × 354, слои — по координатам макета. Остальные
-   236 × 322 — та же карточка, уменьшенная масштабом 236 / 260. Картинка у
-   них в макете не уменьшена: того же размера, по центру карточки и на 137 от
-   верха — поэтому слой картинки масштабом обратно увеличен.
+   236 × 322 — та же карточка, уменьшенная масштабом 236 / 260, картинка
+   уменьшена с ней и ниже на 19,8. У входа и вклада картинка у них в макете
+   не уменьшена — там слой картинки масштабом обратно увеличен.
 
    Состояний «текущий / соседний» с переключением нет: карусель (hero.tsx)
    каждый кадр пишет в слот --t — 1 в центре, 0 у соседних, между ними на ходу.
@@ -103,9 +103,15 @@
   pointer-events: none;
 }
 
-/* Против масштаба карточки, от середины ее верха: у соседних картинка того же
-   размера, что у текущей, по центру и на 137 от верха — как в макете */
+/* У соседних картинка уменьшена вместе с карточкой и ниже на 19,8 — как в
+   макете: рамка картинки там прижата к низу */
 .main-banner__art {
+  transform: translateY(calc(19.85px / var(--banner-scale) * var(--banner-away)));
+}
+
+/* У входа и вклада картинка у соседних того же размера, что у текущей: слой
+   против масштаба карточки, от середины ее верха — по центру и на 137 от верха */
+.main-banner--fixed-art .main-banner__art {
   transform: scale(calc(1 / var(--banner-scale)));
   transform-origin: 130px 0;
 }
@@ -134,62 +140,69 @@
    картинка */
 .main-banner__image--deposit {
   left: -62.9px;
-  top: 131.3px;
+  top: 121.2px;
   width: 363.6px;
   height: 262.4px;
 }
 
-/* Монеты со стрелкой: 403 × 403, центр сдвинут на −7; −5 от центра рамки */
+/* Монеты со стрелкой */
 .main-banner__image--bonus {
-  left: -79px;
-  top: 39px;
-  width: 403px;
-  height: 403px;
+  left: -20px;
+  top: 67px;
+  width: 280px;
+  height: 280px;
 }
 
 /* Кошелек повернут на −9,65° */
 .main-banner__image--loan {
-  left: -51.5px;
-  top: 119.5px;
-  width: 364px;
-  height: 364px;
+  left: 11.94px;
+  top: 118.51px;
+  width: 235.96px;
+  height: 235.96px;
   transform: rotate(-9.65deg);
 }
 
+/* Копилка повернута на 6° */
 .main-banner__image--cashback {
-  left: -42.5px;
-  top: 116px;
-  width: 345px;
-  height: 345px;
+  left: 0;
+  top: 115.5px;
+  width: 260px;
+  height: 260px;
+  transform: rotate(6deg);
 }
 
 .main-banner__image--review {
-  left: -43px;
-  top: 93px;
-  width: 365px;
-  height: 365px;
+  left: 12px;
+  top: 125px;
+  width: 241px;
+  height: 241px;
 }
 
-/* ОСАГО — щит и два куска одного листа: стопка шин (перевернута) и колесо */
-.main-banner__image--osago-shield {
-  left: -14.75px;
-  top: 173.76px;
-  width: 94px;
-  height: 98px;
-  object-fit: cover;
-  object-position: bottom;
-}
-
+/* ОСАГО — три куска одного листа: щит, стопка шин (перевернута) и колесо */
 .main-banner__crop {
   position: absolute;
   overflow: hidden;
 }
 
+.main-banner__image--osago-shield {
+  left: 39.75px;
+  top: 173.78px;
+  width: 60.14px;
+  height: 62.71px;
+}
+
+.main-banner__image--osago-shield img {
+  left: -19.23%;
+  top: -146.3%;
+  width: 413.46%;
+  height: 398.15%;
+}
+
 .main-banner__image--osago-tire {
-  left: -30px;
-  top: 271.76px;
-  width: 209.95px;
-  height: 117.2px;
+  left: 30px;
+  top: 236.5px;
+  width: 134.31px;
+  height: 75px;
   transform: rotate(180deg);
 }
 
@@ -201,10 +214,10 @@
 }
 
 .main-banner__image--osago-wheel {
-  left: 38.12px;
-  top: 167px;
-  width: 242.98px;
-  height: 246.76px;
+  left: 73.59px;
+  top: 169.45px;
+  width: 155.44px;
+  height: 157.91px;
 }
 
 .main-banner__image--osago-wheel img {
