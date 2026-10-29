@@ -248,7 +248,7 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
   const onPointerDown = (event: PointerEvent) => {
     stop()
     // Шаг ленты в пикселях берем из CSS: он разный у вариантов
-    const step = parseFloat(getComputedStyle(event.currentTarget).getPropertyValue("--banner-step")) || 264
+    const step = parseFloat(getComputedStyle(event.currentTarget).getPropertyValue("--banner-step")) || 276
     drag.current = { x: event.clientX, pos: pos.current, step, samples: [{ t: performance.now(), pos: pos.current }] }
     target.current = pos.current
     moved.current = false
