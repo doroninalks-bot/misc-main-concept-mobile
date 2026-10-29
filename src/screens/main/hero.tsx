@@ -320,7 +320,6 @@ export function Hero({ toneChange }: { toneChange: boolean }) {
       // Фон меняется только если включено в панели — по умолчанию выключено,
       // решение дизайнера: смена фона давала подвисание на смене баннера
       data-tone={tuning.toneChange ? banners[active].tone : "blue"}
-      data-smooth-text={tuning.smoothText || undefined}
       data-gpu={tuning.gpuLayers || undefined}
       data-lite={tuning.lite || undefined}
       // Карточки по бокам уходят в градиент, пока не выбрано «Без размытий»

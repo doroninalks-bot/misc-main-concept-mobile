@@ -326,12 +326,6 @@
   will-change: transform, opacity;
 }
 
-/* Ширина текста плавно — по просьбе из панели: строки пересчитываются каждый
-   кадр, на слабом телефоне это рывки */
-.main-hero[data-smooth-text] .main-banner__content {
-  width: calc(212px - 24px * var(--banner-away));
-}
-
 .main-hero[data-lite] .main-hero__dot {
   backdrop-filter: none;
   -webkit-backdrop-filter: none;

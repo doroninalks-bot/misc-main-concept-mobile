@@ -25,8 +25,6 @@ export type CarouselTuningValues = {
   /** Режим «затухание»: доля пути до цели за кадр (при 60 к/с) — чем меньше, тем дольше и мягче доезд */
   settle: number
   parallax: number
-  /** Ширина текста баннера меняется плавно; выкл (по умолчанию) — переключается разом на середине пути, зато без пересчета строк каждый кадр */
-  smoothText: boolean
   /** Сколько пикселей нужно провести пальцем, чтобы перелистнуть баннер; короче — баннер возвращается на место. 0 — листает любой свайп (от 4 px, меньше — нажатие) */
   swipeDistance: number
   /** Инерция свайпа: время затухания, мс — чем больше, тем дольше едет лента после броска */
@@ -48,7 +46,6 @@ export const TUNING_DEFAULTS: CarouselTuningValues = {
   easing: "in-out",
   settle: 0.16,
   parallax: 40,
-  smoothText: false,
   swipeDistance: 0,
   momentumTau: 100,
   momentumPower: 1,
@@ -231,11 +228,6 @@ export function CarouselTuning({
             label="Менять цвет фона"
             checked={values.toneChange}
             onChange={(toneChange) => onChange({ toneChange })}
-          />
-          <Check
-            label="Плавная ширина текста"
-            checked={values.smoothText}
-            onChange={(smoothText) => onChange({ smoothText })}
           />
           <Check
             label="Слои GPU (внутри баннеров)"
